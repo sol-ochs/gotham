@@ -1,0 +1,28 @@
+package com.gotham.app.presentation.ticket.list
+
+import com.gotham.app.domain.model.Ticket
+
+enum class TicketTypeFilter(val displayName: String) {
+    ALL("All"),
+    PARKING("Parking"),
+    CAMERA("Camera")
+}
+
+enum class TicketStatusFilter(val displayName: String) {
+    ALL("All"),
+    PAID("Paid"),
+    UNPAID("Unpaid")
+}
+
+data class TicketListState(
+    val tickets: List<Ticket> = emptyList(),
+    val isLoading: Boolean = false,
+    val isRefreshing: Boolean = false,
+    val error: String? = null,
+    val unseenCount: Int = 0,
+    val selectedTypeFilter: TicketTypeFilter = TicketTypeFilter.ALL,
+    val selectedStatusFilter: TicketStatusFilter = TicketStatusFilter.ALL,
+    val showOlderUnpaid: Boolean = false,
+    val hiddenOlderUnpaidCount: Int = 0,
+    val totalAmountOwed: Double = 0.0
+)

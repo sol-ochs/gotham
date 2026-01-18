@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Gotham</string>
+
+    <!-- Notification -->
+    <string name="notification_channel_name">Parking Tickets</string>
+    <string name="notification_channel_description">Notifications for new parking tickets</string>
+    <string name="notification_title_new_tickets">You have %d new parking ticket(s)</string>
+    <string name="notification_title_single_ticket">New parking ticket</string>
+
+    <!-- Common -->
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="save">Save</string>
+    <string name="edit">Edit</string>
+    <string name="add">Add</string>
+    <string name="retry">Retry</string>
+    <string name="refresh">Refresh</string>
+
+    <!-- Error messages -->
+    <string name="error_no_internet">No internet connection</string>
+    <string name="error_api_failure">Failed to fetch tickets</string>
+    <string name="error_rate_limit">Rate limit exceeded. Please try again later.</string>
+    <string name="error_unknown">An unexpected error occurred</string>
+
+    <!-- Vehicle -->
+    <string name="vehicle_list_title">Vehicles</string>
+    <string name="vehicle_add_title">Add Vehicle</string>
+    <string name="vehicle_edit_title">Edit Vehicle</string>
+    <string name="vehicle_license_plate">License Plate</string>
+    <string name="vehicle_state">State</string>
+    <string name="vehicle_type">Vehicle Type</string>
+    <string name="vehicle_limit_reached">Maximum 5 vehicles allowed</string>
+    <string name="vehicle_delete_confirm">Delete this vehicle and all its tickets?</string>
+    <string name="vehicle_empty_state">No vehicles added yet</string>
+    <string name="vehicle_empty_state_description">Add a vehicle to start monitoring parking tickets</string>
+
+    <!-- Ticket -->
+    <string name="ticket_list_title">Tickets</string>
+    <string name="ticket_detail_title">Ticket Details</string>
+    <string name="ticket_empty_state">No parking tickets found</string>
+    <string name="ticket_empty_state_description">Great news! You have no parking tickets.</string>
+    <string name="ticket_summons_number">Summons #</string>
+    <string name="ticket_violation">Violation</string>
+    <string name="ticket_date">Date</string>
+    <string name="ticket_time">Time</string>
+    <string name="ticket_location">Location</string>
+    <string name="ticket_fine_amount">Fine Amount</string>
+    <string name="ticket_amount_due">Amount Due</string>
+    <string name="ticket_status">Status</string>
+    <string name="ticket_penalty">Penalty</string>
+    <string name="ticket_interest">Interest</string>
+    <string name="ticket_paid">Paid</string>
+    <string name="ticket_new_badge">NEW</string>
+    <string name="ticket_sort_newest">Newest First</string>
+    <string name="ticket_sort_oldest">Oldest First</string>
+    <string name="ticket_sort_amount">By Amount</string>
+    <string name="ticket_filter_all">All Vehicles</string>
+    <string name="ticket_view_summons">View Summons</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_enable_notifications">Enable Notifications</string>
+    <string name="settings_check_frequency">Check Frequency</string>
+    <string name="settings_check_frequency_6h">Every 6 hours</string>
+    <string name="settings_check_frequency_12h">Every 12 hours</string>
+    <string name="settings_check_frequency_24h">Every 24 hours</string>
+    <string name="settings_about">About</string>
+    <string name="settings_version">Version %s</string>
+    <string name="settings_last_check">Last check: %s</string>
+    <string name="settings_last_check_never">Never</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title">Welcome to Gotham</string>
+    <string name="onboarding_description">Monitor your NYC parking tickets and get notified when new ones appear. Because everything is totally fine.</string>
+    <string name="onboarding_button">Add Your First Vehicle</string>
+
+    <!-- Navigation -->
+    <string name="nav_tickets">Tickets</string>
+    <string name="nav_vehicles">Vehicles</string>
+    <string name="nav_settings">Settings</string>
+</resources>

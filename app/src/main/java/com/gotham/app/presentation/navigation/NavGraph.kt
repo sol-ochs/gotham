@@ -1,0 +1,184 @@
+package com.gotham.app.presentation.navigation
+
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Commute
+import androidx.compose.material.icons.filled.Receipt
+import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.navArgument
+import com.gotham.app.R
+import com.gotham.app.presentation.onboarding.OnboardingScreen
+import com.gotham.app.presentation.onboarding.OnboardingViewModel
+import com.gotham.app.presentation.settings.SettingsScreen
+import com.gotham.app.presentation.ticket.detail.TicketDetailScreen
+import com.gotham.app.presentation.ticket.list.TicketListScreen
+import com.gotham.app.presentation.vehicle.add.AddEditVehicleScreen
+import com.gotham.app.presentation.vehicle.list.VehicleListScreen
+
+@Composable
+fun NavGraph(
+    navController: NavHostController,
+    startDestination: String
+) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentRoute = navBackStackEntry?.destination?.route
+
+    val showBottomBar = currentRoute in listOf(
+        Screen.TicketList.route,
+        Screen.VehicleList.route,
+        Screen.Settings.route
+    )
+
+    Scaffold(
+        bottomBar = {
+            if (showBottomBar) {
+                NavigationBar {
+                    NavigationBarItem(
+                        selected = currentRoute == Screen.TicketList.route,
+                        onClick = {
+                            if (currentRoute != Screen.TicketList.route) {
+                                navController.navigate(Screen.TicketList.route) {
+                                    popUpTo(Screen.TicketList.route) { inclusive = true }
+                                }
+                            }
+                        },
+                        icon = { Icon(Icons.Default.Receipt, null) },
+                        label = { Text(stringResource(R.string.nav_tickets)) }
+                    )
+                    NavigationBarItem(
+                        selected = currentRoute == Screen.VehicleList.route,
+                        onClick = {
+                            if (currentRoute != Screen.VehicleList.route) {
+                                navController.navigate(Screen.VehicleList.route) {
+                                    popUpTo(Screen.TicketList.route)
+                                }
+                            }
+                        },
+                        icon = { Icon(Icons.Default.Commute, null) },
+                        label = { Text(stringResource(R.string.nav_vehicles)) }
+                    )
+                    NavigationBarItem(
+                        selected = currentRoute == Screen.Settings.route,
+                        onClick = {
+                            if (currentRoute != Screen.Settings.route) {
+                                navController.navigate(Screen.Settings.route) {
+                                    popUpTo(Screen.TicketList.route)
+                                }
+                            }
+                        },
+                        icon = { Icon(Icons.Default.Settings, null) },
+                        label = { Text(stringResource(R.string.nav_settings)) }
+                    )
+                }
+            }
+        }
+    ) { paddingValues ->
+        NavHost(
+            navController = navController,
+            startDestination = startDestination,
+            modifier = Modifier.padding(paddingValues)
+        ) {
+        composable(Screen.Onboarding.route) {
+            val viewModel: OnboardingViewModel = hiltViewModel()
+            OnboardingScreen(
+                onGetStarted = {
+                    navController.navigate(Screen.AddEditVehicle.createRoute()) {
+                        popUpTo(Screen.Onboarding.route) { inclusive = true }
+                    }
+                }
+            )
+        }
+
+        composable(Screen.TicketList.route) {
+            TicketListScreen(
+                onTicketClick = { summonsNumber ->
+                    navController.navigate(Screen.TicketDetail.createRoute(summonsNumber))
+                },
+                onNavigateToVehicles = {
+                    navController.navigate(Screen.VehicleList.route)
+                },
+                onNavigateToSettings = {
+                    navController.navigate(Screen.Settings.route)
+                }
+            )
+        }
+
+        composable(Screen.VehicleList.route) {
+            VehicleListScreen(
+                onAddVehicle = {
+                    navController.navigate(Screen.AddEditVehicle.createRoute())
+                },
+                onEditVehicle = { vehicleId ->
+                    navController.navigate(Screen.AddEditVehicle.createRoute(vehicleId))
+                },
+                onBack = {
+                    navController.navigateUp()
+                }
+            )
+        }
+
+        composable(
+            route = Screen.AddEditVehicle.route,
+            arguments = listOf(
+                navArgument(Screen.AddEditVehicle.ARG_VEHICLE_ID) {
+                    type = NavType.StringType
+                    defaultValue = "new"
+                }
+            )
+        ) {
+            AddEditVehicleScreen(
+                onNavigateBack = {
+                    navController.navigateUp()
+                },
+                onVehicleSaved = { isFirstVehicle ->
+                    if (isFirstVehicle) {
+                        navController.navigate(Screen.TicketList.route) {
+                            popUpTo(Screen.Onboarding.route) { inclusive = true }
+                        }
+                    } else {
+                        navController.navigateUp()
+                    }
+                }
+            )
+        }
+
+        composable(
+            route = Screen.TicketDetail.route,
+            arguments = listOf(
+                navArgument(Screen.TicketDetail.ARG_SUMMONS_NUMBER) {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            TicketDetailScreen(
+                onBack = {
+                    navController.navigateUp()
+                }
+            )
+        }
+
+        composable(Screen.Settings.route) {
+            SettingsScreen(
+                onBack = {
+                    navController.navigateUp()
+                }
+            )
+        }
+    }
+    }
+}
