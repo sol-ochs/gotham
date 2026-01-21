@@ -46,3 +46,7 @@ google-services.json
 
 # Mac
 .DS_Store
+
+# Claude
+.claude/
+ISSUES.md

@@ -23,8 +23,10 @@
 - [x] On the Tickets page, "show x older unpaid" should be displayed below the tickets
 - [x] Find a less vibrant blue for the buttons
 - [x] The "view violations" button does not need a border
-- [ ] Remove the pay now button (we can add that functionality later) and replace it with the view violations button
-- [ ] Give slightly more space in the tickets page between total amount owed card and the tickets list
+- [x] Remove the pay now button (we can add that functionality later) and replace it with the view violations button
+- [ ] Make the view violations button yellow and narrower, align it right
+- [ ] Give more space in the tickets page between total amount owed card and the tickets list
+
 
 ## Stretch goals
 
