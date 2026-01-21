@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -28,7 +27,6 @@ import androidx.navigation.navArgument
 import com.gotham.app.R
 import com.gotham.app.presentation.home.HomeScreen
 import com.gotham.app.presentation.onboarding.OnboardingScreen
-import com.gotham.app.presentation.onboarding.OnboardingViewModel
 import com.gotham.app.presentation.settings.SettingsScreen
 import com.gotham.app.presentation.ticket.detail.TicketDetailScreen
 import com.gotham.app.presentation.ticket.list.TicketListScreen
@@ -109,7 +107,6 @@ fun NavGraph(
             modifier = Modifier.padding(paddingValues)
         ) {
         composable(Screen.Onboarding.route) {
-            val viewModel: OnboardingViewModel = hiltViewModel()
             OnboardingScreen(
                 onGetStarted = {
                     navController.navigate(Screen.AddEditVehicle.createRoute()) {
