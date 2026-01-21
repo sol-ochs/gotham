@@ -1,8 +1,5 @@
 package com.gotham.app.presentation.home
 
-import android.content.Intent
-import android.net.Uri
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,7 +36,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
@@ -52,7 +48,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -78,7 +73,6 @@ fun HomeScreen(
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val pullToRefreshState = rememberPullToRefreshState()
-    val context = LocalContext.current
 
     LaunchedEffect(state.error) {
         state.error?.let {
@@ -213,11 +207,7 @@ fun HomeScreen(
                     items(state.vehicles, key = { it.vehicle.id }) { vehicleSummary ->
                         VehicleCard(
                             vehicleSummary = vehicleSummary,
-                            onViewViolations = { onNavigateToTickets(vehicleSummary.vehicle.id) },
-                            onPayNow = {
-                                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(Constants.NYC_PAYMENT_URL))
-                                context.startActivity(intent)
-                            }
+                            onViewViolations = { onNavigateToTickets(vehicleSummary.vehicle.id) }
                         )
                     }
                 }
@@ -266,8 +256,7 @@ private fun TotalBalanceCard(totalBalance: Double) {
 @Composable
 private fun VehicleCard(
     vehicleSummary: VehicleWithTicketSummary,
-    onViewViolations: () -> Unit,
-    onPayNow: () -> Unit
+    onViewViolations: () -> Unit
 ) {
     val vehicle = vehicleSummary.vehicle
 
@@ -324,26 +313,16 @@ private fun VehicleCard(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.End
             ) {
-                TextButton(
+                Button(
                     onClick = onViewViolations,
-                    modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.textButtonColors(
-                        contentColor = BlueAccent
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = GoldenYellow,
+                        contentColor = Color.Black
                     )
                 ) {
                     Text(stringResource(R.string.home_view_violations))
-                }
-                Button(
-                    onClick = onPayNow,
-                    modifier = Modifier.weight(1f),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = BlueAccent,
-                        contentColor = Color.White
-                    )
-                ) {
-                    Text(stringResource(R.string.home_pay_now))
                 }
             }
         }
