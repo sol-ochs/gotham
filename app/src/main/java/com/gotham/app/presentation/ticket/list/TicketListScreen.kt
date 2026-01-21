@@ -179,6 +179,12 @@ fun TicketListScreen(
                 item {
                     TotalAmountCard(totalAmount = state.totalAmountOwed)
                 }
+                items(state.tickets, key = { it.summonsNumber }) { ticket ->
+                    TicketCard(
+                        ticket = ticket,
+                        onClick = { onTicketClick(ticket.summonsNumber) }
+                    )
+                }
                 if (state.selectedStatusFilter == TicketStatusFilter.UNPAID &&
                     (state.hiddenOlderUnpaidCount > 0 || state.showOlderUnpaid)
                 ) {
@@ -189,12 +195,6 @@ fun TicketListScreen(
                             onToggle = viewModel::onToggleShowOlderUnpaid
                         )
                     }
-                }
-                items(state.tickets, key = { it.summonsNumber }) { ticket ->
-                    TicketCard(
-                        ticket = ticket,
-                        onClick = { onTicketClick(ticket.summonsNumber) }
-                    )
                 }
             }
 

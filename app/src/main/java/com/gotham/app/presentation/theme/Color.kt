@@ -8,10 +8,10 @@ val OnPrimary = Color(0xFF1A1A1A)
 val PrimaryContainer = Color(0xFF3D3520)
 val OnPrimaryContainer = Color(0xFFFFE4A0)
 
-// Secondary (Blue - for buttons)
-val Secondary = Color(0xFF2563EB)
+// Secondary (Blue - for buttons, muted)
+val Secondary = Color(0xFF5B8DEF)
 val OnSecondary = Color(0xFFFFFFFF)
-val SecondaryContainer = Color(0xFF1E40AF)
+val SecondaryContainer = Color(0xFF3D5A80)
 val OnSecondaryContainer = Color(0xFFDBEAFE)
 
 // Tertiary (Navy)
@@ -40,6 +40,6 @@ val OutlineVariant = Color(0xFF43474E)
 
 // Custom colors for the new design
 val GoldenYellow = Color(0xFFEFBF38)
-val BlueAccent = Color(0xFF2563EB)
+val BlueAccent = Color(0xFF5B8DEF)
 val CardBackground = Color(0xFF1A2744)
 val DarkerCardBackground = Color(0xFF151E2D)

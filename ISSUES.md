@@ -20,9 +20,11 @@
 - [x] Find ways to incorporate more of the accent colo/r
 - [x] Ability to filter on paid/unpaid, with older unpaid hidden under "show older"
 - [x] Total amount owed
-- [ ] On the Tickets page, "show x older unpaid" should be displayed below the tickets
-- [ ] Find a less vibrant blue for the buttons
-- [ ] The "view violations" button does not need a border
+- [x] On the Tickets page, "show x older unpaid" should be displayed below the tickets
+- [x] Find a less vibrant blue for the buttons
+- [x] The "view violations" button does not need a border
+- [ ] Remove the pay now button (we can add that functionality later) and replace it with the view violations button
+- [ ] Give slightly more space in the tickets page between total amount owed card and the tickets list
 
 ## Stretch goals
 
