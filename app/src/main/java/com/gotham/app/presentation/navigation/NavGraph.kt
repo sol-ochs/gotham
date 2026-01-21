@@ -6,10 +6,14 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Receipt
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import com.gotham.app.presentation.theme.DarkerCardBackground
+import com.gotham.app.presentation.theme.GoldenYellow
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -46,7 +50,16 @@ fun NavGraph(
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
-                NavigationBar {
+                val navItemColors = NavigationBarItemDefaults.colors(
+                    selectedIconColor = GoldenYellow,
+                    selectedTextColor = GoldenYellow,
+                    indicatorColor = DarkerCardBackground,
+                    unselectedIconColor = MaterialTheme.colorScheme.onSurfaceVariant,
+                    unselectedTextColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+                NavigationBar(
+                    containerColor = DarkerCardBackground
+                ) {
                     NavigationBarItem(
                         selected = currentRoute == Screen.Home.route,
                         onClick = {
@@ -57,7 +70,8 @@ fun NavGraph(
                             }
                         },
                         icon = { Icon(Icons.Default.Home, null) },
-                        label = { Text(stringResource(R.string.nav_home)) }
+                        label = { Text(stringResource(R.string.nav_home)) },
+                        colors = navItemColors
                     )
                     NavigationBarItem(
                         selected = currentRoute?.startsWith("ticket_list") == true,
@@ -69,7 +83,8 @@ fun NavGraph(
                             }
                         },
                         icon = { Icon(Icons.Default.Receipt, null) },
-                        label = { Text(stringResource(R.string.nav_tickets)) }
+                        label = { Text(stringResource(R.string.nav_tickets)) },
+                        colors = navItemColors
                     )
                     NavigationBarItem(
                         selected = currentRoute == Screen.Settings.route,
@@ -81,7 +96,8 @@ fun NavGraph(
                             }
                         },
                         icon = { Icon(Icons.Default.Settings, null) },
-                        label = { Text(stringResource(R.string.nav_settings)) }
+                        label = { Text(stringResource(R.string.nav_settings)) },
+                        colors = navItemColors
                     )
                 }
             }
