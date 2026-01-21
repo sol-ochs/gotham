@@ -1,0 +1,44 @@
+package com.gotham.app.domain.usecase.vehicle
+
+import com.gotham.app.domain.model.Vehicle
+import com.gotham.app.domain.repository.TicketRepository
+import com.gotham.app.domain.repository.VehicleRepository
+import com.gotham.app.presentation.home.VehicleWithTicketSummary
+import com.gotham.app.util.Constants.PAYABLE_TICKET_AGE_DAYS
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.flowOf
+import java.time.LocalDateTime
+import javax.inject.Inject
+
+class GetVehiclesWithTicketSummaryUseCase @Inject constructor(
+    private val vehicleRepository: VehicleRepository,
+    private val ticketRepository: TicketRepository
+) {
+    operator fun invoke(): Flow<List<VehicleWithTicketSummary>> {
+        return vehicleRepository.getAllVehicles().flatMapLatest { vehicles ->
+            if (vehicles.isEmpty()) {
+                flowOf(emptyList())
+            } else {
+                val ticketFlows = vehicles.map { vehicle ->
+                    ticketRepository.getTicketsByVehicleId(vehicle.id)
+                }
+                combine(ticketFlows) { ticketLists ->
+                    val ageThreshold = LocalDateTime.now().minusDays(PAYABLE_TICKET_AGE_DAYS)
+                    vehicles.mapIndexed { index, vehicle ->
+                        val tickets = ticketLists[index]
+                        val payableUnpaidTickets = tickets.filter { ticket ->
+                            !ticket.isPaid && ticket.issueDateTime.isAfter(ageThreshold)
+                        }
+                        VehicleWithTicketSummary(
+                            vehicle = vehicle,
+                            openTicketCount = payableUnpaidTickets.size,
+                            amountDue = payableUnpaidTickets.sumOf { it.amountDue }
+                        )
+                    }
+                }
+            }
+        }
+    }
+}

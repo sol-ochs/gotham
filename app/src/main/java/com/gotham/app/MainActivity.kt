@@ -10,16 +10,11 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.rememberNavController
 import com.gotham.app.presentation.navigation.NavGraph
 import com.gotham.app.presentation.navigation.Screen
-import com.gotham.app.presentation.onboarding.OnboardingViewModel
 import com.gotham.app.presentation.theme.GothamTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -42,25 +37,10 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
-                    val viewModel: OnboardingViewModel = hiltViewModel()
-                    val hasVehicles by viewModel.hasVehicles.collectAsStateWithLifecycle()
-
-                    LaunchedEffect(Unit) {
-                        viewModel.checkOnboardingStatus()
-                    }
-
-                    if (hasVehicles != null) {
-                    val startDestination = if (hasVehicles == true) {
-                            Screen.TicketList.route
-                        } else {
-                            Screen.Onboarding.route
-                        }
-
-                        NavGraph(
-                            navController = navController,
-                            startDestination = startDestination
-                        )
-                    }
+                    NavGraph(
+                        navController = navController,
+                        startDestination = Screen.Home.route
+                    )
                 }
             }
         }

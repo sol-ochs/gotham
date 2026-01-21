@@ -9,7 +9,7 @@ import com.gotham.app.data.local.entity.VehicleEntity
 
 @Database(
     entities = [VehicleEntity::class, TicketEntity::class],
-    version = 2,
+    version = 3,
     exportSchema = true
 )
 abstract class AppDatabase : RoomDatabase() {

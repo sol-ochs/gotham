@@ -5,9 +5,10 @@ data class Vehicle(
     val licensePlate: String,
     val state: UsState,
     val vehicleType: VehicleType,
+    val nickname: String? = null,
     val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis()
 ) {
     val displayName: String
-        get() = "$licensePlate (${state.code})"
+        get() = nickname ?: "$licensePlate (${state.code})"
 }

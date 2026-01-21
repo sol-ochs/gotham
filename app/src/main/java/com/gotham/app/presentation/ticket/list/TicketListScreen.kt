@@ -11,23 +11,23 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Commute
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.FilterList
+import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SegmentedButton
 import androidx.compose.material3.SegmentedButtonDefaults
@@ -49,21 +49,25 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gotham.app.R
 import com.gotham.app.domain.model.Ticket
+import com.gotham.app.presentation.theme.DarkerCardBackground
+import com.gotham.app.presentation.theme.GoldenYellow
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TicketListScreen(
     onTicketClick: (String) -> Unit,
-    onNavigateToVehicles: () -> Unit,
     onNavigateToSettings: () -> Unit,
     viewModel: TicketListViewModel = hiltViewModel()
 ) {
@@ -73,7 +77,8 @@ fun TicketListScreen(
     var showFilterSheet by remember { mutableStateOf(false) }
     val sheetState = rememberModalBottomSheetState()
     val hasActiveFilters = state.selectedTypeFilter != TicketTypeFilter.ALL ||
-                           state.selectedStatusFilter != TicketStatusFilter.ALL
+                           state.selectedStatusFilter != TicketStatusFilter.ALL ||
+                           state.selectedVehicleId != null
 
     LaunchedEffect(state.error) {
         state.error?.let {
@@ -98,35 +103,61 @@ fun TicketListScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text(
-                        text = stringResource(R.string.ticket_list_title),
-                        color = MaterialTheme.colorScheme.primary
-                    )
+                    Column {
+                        Text(
+                            text = "GOTHAM",
+                            style = MaterialTheme.typography.titleLarge.copy(
+                                fontWeight = FontWeight.Bold,
+                                letterSpacing = 2.sp
+                            ),
+                            color = GoldenYellow
+                        )
+                        Text(
+                            text = "ALL VIOLATIONS",
+                            style = MaterialTheme.typography.labelSmall.copy(
+                                letterSpacing = 1.sp
+                            ),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    actionIconContentColor = MaterialTheme.colorScheme.primary
+                    containerColor = MaterialTheme.colorScheme.background
                 ),
                 actions = {
                     BadgedBox(
                         badge = {
                             if (hasActiveFilters) {
-                                Badge()
+                                Badge(containerColor = GoldenYellow)
                             }
                         }
                     ) {
                         IconButton(onClick = { showFilterSheet = true }) {
-                            Icon(Icons.Default.FilterList, contentDescription = "Filter")
+                            Icon(
+                                Icons.Default.FilterList,
+                                contentDescription = "Filter",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
                         }
                     }
                     BadgedBox(
                         badge = {
                             if (state.unseenCount > 0) {
-                                Badge { Text(state.unseenCount.toString()) }
+                                Badge(
+                                    containerColor = GoldenYellow,
+                                    contentColor = Color.Black
+                                ) {
+                                    Text(state.unseenCount.toString())
+                                }
                             }
                         }
                     ) {
                         IconButton(onClick = viewModel::refresh) {
-                            Icon(Icons.Default.Refresh, contentDescription = "Refresh")
+                            Icon(
+                                Icons.Default.Refresh,
+                                contentDescription = "Refresh",
+                                tint = MaterialTheme.colorScheme.onSurface
+                            )
                         }
                     }
                 }
@@ -177,7 +208,8 @@ fun TicketListScreen(
     if (showFilterSheet) {
         ModalBottomSheet(
             onDismissRequest = { showFilterSheet = false },
-            sheetState = sheetState
+            sheetState = sheetState,
+            containerColor = MaterialTheme.colorScheme.surface
         ) {
             Column(
                 modifier = Modifier
@@ -186,6 +218,19 @@ fun TicketListScreen(
                     .padding(bottom = 32.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
+                if (state.availableVehicles.isNotEmpty()) {
+                    Text(
+                        text = "Vehicle",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                    VehicleFilterDropdown(
+                        vehicles = state.availableVehicles,
+                        selectedVehicleId = state.selectedVehicleId,
+                        onVehicleSelected = { viewModel.onVehicleFilterChanged(it) }
+                    )
+                }
+
                 Text(
                     text = "Type",
                     style = MaterialTheme.typography.labelLarge,
@@ -231,6 +276,66 @@ fun TicketListScreen(
 }
 
 @Composable
+private fun VehicleFilterDropdown(
+    vehicles: List<com.gotham.app.domain.model.Vehicle>,
+    selectedVehicleId: Long?,
+    onVehicleSelected: (Long?) -> Unit
+) {
+    var expanded by remember { mutableStateOf(false) }
+    val selectedVehicle = vehicles.find { it.id == selectedVehicleId }
+
+    Box {
+        OutlinedCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { expanded = true }
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = selectedVehicle?.displayName ?: stringResource(R.string.ticket_filter_all),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface
+                )
+                Icon(
+                    Icons.Default.ArrowDropDown,
+                    contentDescription = null,
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.fillMaxWidth(0.9f)
+        ) {
+            DropdownMenuItem(
+                text = { Text(stringResource(R.string.ticket_filter_all)) },
+                onClick = {
+                    onVehicleSelected(null)
+                    expanded = false
+                }
+            )
+            vehicles.forEach { vehicle ->
+                DropdownMenuItem(
+                    text = { Text(vehicle.displayName) },
+                    onClick = {
+                        onVehicleSelected(vehicle.id)
+                        expanded = false
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
 private fun TicketCard(
     ticket: Ticket,
     onClick: () -> Unit
@@ -238,7 +343,11 @@ private fun TicketCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .clickable(onClick = onClick)
+            .clickable(onClick = onClick),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        shape = RoundedCornerShape(12.dp)
     ) {
         Column(
             modifier = Modifier
@@ -255,11 +364,13 @@ private fun TicketCard(
                     style = MaterialTheme.typography.titleMedium,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier.weight(1f),
+                    color = MaterialTheme.colorScheme.onSurface
                 )
                 if (ticket.isNew) {
                     Badge(
-                        containerColor = MaterialTheme.colorScheme.primary,
+                        containerColor = GoldenYellow,
+                        contentColor = Color.Black,
                         modifier = Modifier.padding(start = 8.dp)
                     ) {
                         Text(stringResource(R.string.ticket_new_badge))
@@ -269,7 +380,7 @@ private fun TicketCard(
             Text(
                 text = ticket.plate,
                 style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.primary
+                color = GoldenYellow
             )
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
@@ -281,14 +392,14 @@ private fun TicketCard(
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
-                    text = "•",
+                    text = "\u2022",
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
                 Text(
                     text = ticket.formattedFineAmount,
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.primary
+                    color = GoldenYellow
                 )
             }
         }
@@ -300,24 +411,27 @@ private fun TotalAmountCard(totalAmount: Double) {
     Card(
         modifier = Modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.primaryContainer
-        )
+            containerColor = DarkerCardBackground
+        ),
+        shape = RoundedCornerShape(16.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
                 text = "Total Amount Owed",
-                style = MaterialTheme.typography.labelLarge,
-                color = MaterialTheme.colorScheme.onPrimaryContainer
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
             Text(
                 text = String.format(Locale.US, "$%.2f", totalAmount),
-                style = MaterialTheme.typography.headlineMedium,
-                color = MaterialTheme.colorScheme.primary
+                style = MaterialTheme.typography.headlineLarge.copy(
+                    fontWeight = FontWeight.Bold
+                ),
+                color = GoldenYellow
             )
         }
     }
@@ -340,7 +454,7 @@ private fun ShowOlderUnpaidToggle(
                 "Show $hiddenCount older unpaid (90+ days)"
             },
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.primary
+            color = GoldenYellow
         )
     }
 }

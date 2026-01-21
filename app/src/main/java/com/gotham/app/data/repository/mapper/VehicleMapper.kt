@@ -14,6 +14,7 @@ fun VehicleEntity.toDomain(): Vehicle? {
         licensePlate = licensePlate,
         state = usState,
         vehicleType = vehicleType,
+        nickname = nickname,
         createdAt = createdAt,
         updatedAt = updatedAt
     )
@@ -25,6 +26,7 @@ fun Vehicle.toEntity(): VehicleEntity {
         licensePlate = licensePlate.uppercase().trim(),
         state = state.code,
         vehicleType = vehicleType.code,
+        nickname = nickname?.trim()?.takeIf { it.isNotEmpty() },
         createdAt = createdAt,
         updatedAt = updatedAt
     )

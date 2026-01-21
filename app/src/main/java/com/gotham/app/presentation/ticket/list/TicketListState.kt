@@ -1,6 +1,7 @@
 package com.gotham.app.presentation.ticket.list
 
 import com.gotham.app.domain.model.Ticket
+import com.gotham.app.domain.model.Vehicle
 
 enum class TicketTypeFilter(val displayName: String) {
     ALL("All"),
@@ -22,6 +23,8 @@ data class TicketListState(
     val unseenCount: Int = 0,
     val selectedTypeFilter: TicketTypeFilter = TicketTypeFilter.ALL,
     val selectedStatusFilter: TicketStatusFilter = TicketStatusFilter.ALL,
+    val selectedVehicleId: Long? = null,
+    val availableVehicles: List<Vehicle> = emptyList(),
     val showOlderUnpaid: Boolean = false,
     val hiddenOlderUnpaidCount: Int = 0,
     val totalAmountOwed: Double = 0.0

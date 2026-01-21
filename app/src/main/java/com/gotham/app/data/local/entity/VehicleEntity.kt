@@ -18,6 +18,9 @@ data class VehicleEntity(
     @ColumnInfo(name = "vehicle_type")
     val vehicleType: String,
 
+    @ColumnInfo(name = "nickname")
+    val nickname: String? = null,
+
     @ColumnInfo(name = "created_at")
     val createdAt: Long = System.currentTimeMillis(),
 

@@ -2,7 +2,7 @@ package com.gotham.app.presentation.navigation
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Commute
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Receipt
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Icon
@@ -22,13 +22,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.gotham.app.R
+import com.gotham.app.presentation.home.HomeScreen
 import com.gotham.app.presentation.onboarding.OnboardingScreen
 import com.gotham.app.presentation.onboarding.OnboardingViewModel
 import com.gotham.app.presentation.settings.SettingsScreen
 import com.gotham.app.presentation.ticket.detail.TicketDetailScreen
 import com.gotham.app.presentation.ticket.list.TicketListScreen
 import com.gotham.app.presentation.vehicle.add.AddEditVehicleScreen
-import com.gotham.app.presentation.vehicle.list.VehicleListScreen
 
 @Composable
 fun NavGraph(
@@ -39,21 +39,32 @@ fun NavGraph(
     val currentRoute = navBackStackEntry?.destination?.route
 
     val showBottomBar = currentRoute in listOf(
-        Screen.TicketList.route,
-        Screen.VehicleList.route,
+        Screen.Home.route,
         Screen.Settings.route
-    )
+    ) || currentRoute?.startsWith("ticket_list") == true
 
     Scaffold(
         bottomBar = {
             if (showBottomBar) {
                 NavigationBar {
                     NavigationBarItem(
-                        selected = currentRoute == Screen.TicketList.route,
+                        selected = currentRoute == Screen.Home.route,
                         onClick = {
-                            if (currentRoute != Screen.TicketList.route) {
-                                navController.navigate(Screen.TicketList.route) {
-                                    popUpTo(Screen.TicketList.route) { inclusive = true }
+                            if (currentRoute != Screen.Home.route) {
+                                navController.navigate(Screen.Home.route) {
+                                    popUpTo(Screen.Home.route) { inclusive = true }
+                                }
+                            }
+                        },
+                        icon = { Icon(Icons.Default.Home, null) },
+                        label = { Text(stringResource(R.string.nav_home)) }
+                    )
+                    NavigationBarItem(
+                        selected = currentRoute?.startsWith("ticket_list") == true,
+                        onClick = {
+                            if (currentRoute?.startsWith("ticket_list") != true) {
+                                navController.navigate(Screen.TicketList.createRoute()) {
+                                    popUpTo(Screen.Home.route)
                                 }
                             }
                         },
@@ -61,23 +72,11 @@ fun NavGraph(
                         label = { Text(stringResource(R.string.nav_tickets)) }
                     )
                     NavigationBarItem(
-                        selected = currentRoute == Screen.VehicleList.route,
-                        onClick = {
-                            if (currentRoute != Screen.VehicleList.route) {
-                                navController.navigate(Screen.VehicleList.route) {
-                                    popUpTo(Screen.TicketList.route)
-                                }
-                            }
-                        },
-                        icon = { Icon(Icons.Default.Commute, null) },
-                        label = { Text(stringResource(R.string.nav_vehicles)) }
-                    )
-                    NavigationBarItem(
                         selected = currentRoute == Screen.Settings.route,
                         onClick = {
                             if (currentRoute != Screen.Settings.route) {
                                 navController.navigate(Screen.Settings.route) {
-                                    popUpTo(Screen.TicketList.route)
+                                    popUpTo(Screen.Home.route)
                                 }
                             }
                         },
@@ -104,13 +103,13 @@ fun NavGraph(
             )
         }
 
-        composable(Screen.TicketList.route) {
-            TicketListScreen(
-                onTicketClick = { summonsNumber ->
-                    navController.navigate(Screen.TicketDetail.createRoute(summonsNumber))
+        composable(Screen.Home.route) {
+            HomeScreen(
+                onNavigateToAddVehicle = {
+                    navController.navigate(Screen.AddEditVehicle.createRoute())
                 },
-                onNavigateToVehicles = {
-                    navController.navigate(Screen.VehicleList.route)
+                onNavigateToTickets = { vehicleId ->
+                    navController.navigate(Screen.TicketList.createRoute(vehicleId, "UNPAID"))
                 },
                 onNavigateToSettings = {
                     navController.navigate(Screen.Settings.route)
@@ -118,16 +117,27 @@ fun NavGraph(
             )
         }
 
-        composable(Screen.VehicleList.route) {
-            VehicleListScreen(
-                onAddVehicle = {
-                    navController.navigate(Screen.AddEditVehicle.createRoute())
+        composable(
+            route = Screen.TicketList.route,
+            arguments = listOf(
+                navArgument(Screen.TicketList.ARG_VEHICLE_ID) {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
                 },
-                onEditVehicle = { vehicleId ->
-                    navController.navigate(Screen.AddEditVehicle.createRoute(vehicleId))
+                navArgument(Screen.TicketList.ARG_STATUS_FILTER) {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = null
+                }
+            )
+        ) {
+            TicketListScreen(
+                onTicketClick = { summonsNumber ->
+                    navController.navigate(Screen.TicketDetail.createRoute(summonsNumber))
                 },
-                onBack = {
-                    navController.navigateUp()
+                onNavigateToSettings = {
+                    navController.navigate(Screen.Settings.route)
                 }
             )
         }
@@ -147,7 +157,7 @@ fun NavGraph(
                 },
                 onVehicleSaved = { isFirstVehicle ->
                     if (isFirstVehicle) {
-                        navController.navigate(Screen.TicketList.route) {
+                        navController.navigate(Screen.Home.route) {
                             popUpTo(Screen.Onboarding.route) { inclusive = true }
                         }
                     } else {

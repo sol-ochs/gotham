@@ -28,6 +28,8 @@
     <string name="vehicle_list_title">Vehicles</string>
     <string name="vehicle_add_title">Add Vehicle</string>
     <string name="vehicle_edit_title">Edit Vehicle</string>
+    <string name="vehicle_nickname">Nickname</string>
+    <string name="vehicle_nickname_hint">e.g., My Honda, Work Car</string>
     <string name="vehicle_license_plate">License Plate</string>
     <string name="vehicle_state">State</string>
     <string name="vehicle_type">Vehicle Type</string>
@@ -35,6 +37,7 @@
     <string name="vehicle_delete_confirm">Delete this vehicle and all its tickets?</string>
     <string name="vehicle_empty_state">No vehicles added yet</string>
     <string name="vehicle_empty_state_description">Add a vehicle to start monitoring parking tickets</string>
+    <string name="vehicle_save_button">Save Vehicle</string>
 
     <!-- Ticket -->
     <string name="ticket_list_title">Tickets</string>
@@ -78,7 +81,16 @@
     <string name="onboarding_button">Add Your First Vehicle</string>
 
     <!-- Navigation -->
+    <string name="nav_home">Home</string>
     <string name="nav_tickets">Tickets</string>
     <string name="nav_vehicles">Vehicles</string>
     <string name="nav_settings">Settings</string>
+
+    <!-- Home -->
+    <string name="home_total_balance_due">Total Balance Due</string>
+    <string name="home_your_vehicles">Your Vehicles</string>
+    <string name="home_add_new">+ Add New</string>
+    <string name="home_add_vehicle">Add Vehicle</string>
+    <string name="home_view_violations">View Violations</string>
+    <string name="home_pay_now">Pay Now</string>
 </resources>

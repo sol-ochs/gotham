@@ -19,6 +19,9 @@ object Constants {
     // Vehicle
     const val MAX_VEHICLES = 5
 
+    // Ticket Age Thresholds
+    const val PAYABLE_TICKET_AGE_DAYS = 100L
+
     // Notification
     const val NOTIFICATION_CHANNEL_ID = "parking_tickets_channel"
     const val NOTIFICATION_CHANNEL_NAME = "Parking Tickets"
@@ -27,6 +30,9 @@ object Constants {
     // Deep Links
     const val DEEP_LINK_SCHEME = "gotham"
     const val DEEP_LINK_HOST_TICKET = "ticket"
+
+    // External Links
+    const val NYC_PAYMENT_URL = "https://www1.nyc.gov/site/finance/vehicles/services-background.page"
 
     // Preferences
     const val PREFS_NAME = "gotham_prefs"

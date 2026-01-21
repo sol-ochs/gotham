@@ -61,6 +61,7 @@ class AddEditVehicleViewModel @Inject constructor(
                     it.copy(
                         vehicleId = vehicle.id,
                         licensePlate = vehicle.licensePlate,
+                        nickname = vehicle.nickname ?: "",
                         selectedState = vehicle.state,
                         selectedVehicleType = vehicle.vehicleType,
                         isLoading = false
@@ -79,6 +80,10 @@ class AddEditVehicleViewModel @Inject constructor(
 
     fun onLicensePlateChange(plate: String) {
         _state.update { it.copy(licensePlate = plate.uppercase().trim()) }
+    }
+
+    fun onNicknameChange(nickname: String) {
+        _state.update { it.copy(nickname = nickname) }
     }
 
     fun onStateSelected(state: UsState) {
@@ -104,7 +109,8 @@ class AddEditVehicleViewModel @Inject constructor(
                 id = currentState.vehicleId ?: 0,
                 licensePlate = currentState.licensePlate,
                 state = currentState.selectedState,
-                vehicleType = currentState.selectedVehicleType
+                vehicleType = currentState.selectedVehicleType,
+                nickname = currentState.nickname.takeIf { it.isNotBlank() }
             )
 
             when (val result = addVehicleUseCase(vehicle)) {

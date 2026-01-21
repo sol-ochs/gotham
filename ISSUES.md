@@ -20,10 +20,14 @@
 - [x] Find ways to incorporate more of the accent colo/r
 - [x] Ability to filter on paid/unpaid, with older unpaid hidden under "show older"
 - [x] Total amount owed
+- [ ] On the Tickets page, "show x older unpaid" should be displayed below the tickets
+- [ ] Find a less vibrant blue for the buttons
+- [ ] The "view violations" button does not need a border
 
 ## Stretch goals
 
 - [ ] Map view
 - [ ] Map clustering
 - [ ] Analyze past ticket in cluster area, display predicted inspection time
+- [ ] Save parking location. Can inquire which side of street for accuracy. Will then warn when alternate side tomorrow and alert. Will also say if alternate side suspended.
 
