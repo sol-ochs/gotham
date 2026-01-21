@@ -123,9 +123,6 @@ fun NavGraph(
                 },
                 onNavigateToTickets = { vehicleId ->
                     navController.navigate(Screen.TicketList.createRoute(vehicleId, "UNPAID"))
-                },
-                onNavigateToSettings = {
-                    navController.navigate(Screen.Settings.route)
                 }
             )
         }
