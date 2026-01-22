@@ -1,6 +1,5 @@
 package com.gotham.app.domain.usecase.vehicle
 
-import com.gotham.app.domain.model.Vehicle
 import com.gotham.app.domain.repository.TicketRepository
 import com.gotham.app.domain.repository.VehicleRepository
 import com.gotham.app.presentation.home.VehicleWithTicketSummary

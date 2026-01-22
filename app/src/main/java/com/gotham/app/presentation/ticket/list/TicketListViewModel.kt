@@ -181,20 +181,16 @@ class TicketListViewModel @Inject constructor(
         val threshold = LocalDateTime.now().minusDays(PAYABLE_TICKET_AGE_DAYS)
         val vehiclePlate = vehicleId?.let { id -> allVehicles.find { it.id == id }?.licensePlate }
 
-        return tickets
-            .filter { ticket ->
-                vehiclePlate == null || ticket.plate.equals(vehiclePlate, ignoreCase = true)
-            }
-            .filter { !it.isPaid }
-            .filter { it.issueDateTime.isBefore(threshold) }
-            .filter { ticket ->
+        return tickets.count { ticket ->
+            (vehiclePlate == null || ticket.plate.equals(vehiclePlate, ignoreCase = true)) &&
+                !ticket.isPaid &&
+                ticket.issueDateTime.isBefore(threshold) &&
                 when (typeFilter) {
                     TicketTypeFilter.ALL -> true
                     TicketTypeFilter.CAMERA -> ViolationType.fromCode(ticket.violation).isCamera()
                     TicketTypeFilter.PARKING -> !ViolationType.fromCode(ticket.violation).isCamera()
                 }
-            }
-            .count()
+        }
     }
 
     private fun calculateTotalAmountOwed(tickets: List<Ticket>, vehicleId: Long?, showOlderUnpaid: Boolean): Double {
