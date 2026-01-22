@@ -2,8 +2,10 @@ package com.gotham.app.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.gotham.app.domain.model.Vehicle
 import com.gotham.app.domain.usecase.sync.RefreshTicketsUseCase
 import com.gotham.app.domain.usecase.ticket.GetUnseenTicketCountUseCase
+import com.gotham.app.domain.usecase.vehicle.DeleteVehicleUseCase
 import com.gotham.app.domain.usecase.vehicle.GetVehiclesWithTicketSummaryUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,7 +21,8 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getVehiclesWithTicketSummaryUseCase: GetVehiclesWithTicketSummaryUseCase,
     private val getUnseenTicketCountUseCase: GetUnseenTicketCountUseCase,
-    private val refreshTicketsUseCase: RefreshTicketsUseCase
+    private val refreshTicketsUseCase: RefreshTicketsUseCase,
+    private val deleteVehicleUseCase: DeleteVehicleUseCase
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(HomeState())
@@ -64,6 +67,18 @@ class HomeViewModel @Inject constructor(
             _state.update { it.copy(isRefreshing = true) }
             refreshTicketsUseCase()
             _state.update { it.copy(isRefreshing = false) }
+        }
+    }
+
+    fun deleteVehicle(vehicle: Vehicle) {
+        viewModelScope.launch {
+            try {
+                deleteVehicleUseCase(vehicle.id)
+            } catch (e: Exception) {
+                _state.update {
+                    it.copy(error = e.message ?: "Failed to delete vehicle")
+                }
+            }
         }
     }
 

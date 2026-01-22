@@ -19,6 +19,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.outlined.Delete
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
@@ -33,6 +35,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
@@ -40,7 +43,9 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -53,6 +58,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gotham.app.R
+import com.gotham.app.domain.model.Vehicle
 import com.gotham.app.presentation.theme.BlueAccent
 import com.gotham.app.presentation.theme.DarkerCardBackground
 import com.gotham.app.presentation.theme.GoldenYellow
@@ -63,12 +69,14 @@ import java.util.Locale
 @Composable
 fun HomeScreen(
     onNavigateToAddVehicle: () -> Unit,
+    onNavigateToEditVehicle: (Long) -> Unit,
     onNavigateToTickets: (Long?) -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
     val snackbarHostState = remember { SnackbarHostState() }
     val pullToRefreshState = rememberPullToRefreshState()
+    var vehicleToDelete by remember { mutableStateOf<Vehicle?>(null) }
 
     LaunchedEffect(state.error) {
         state.error?.let {
@@ -185,6 +193,8 @@ fun HomeScreen(
                     items(state.vehicles, key = { it.vehicle.id }) { vehicleSummary ->
                         VehicleCard(
                             vehicleSummary = vehicleSummary,
+                            onEdit = { onNavigateToEditVehicle(vehicleSummary.vehicle.id) },
+                            onDelete = { vehicleToDelete = vehicleSummary.vehicle },
                             onViewViolations = { onNavigateToTickets(vehicleSummary.vehicle.id) }
                         )
                     }
@@ -196,6 +206,32 @@ fun HomeScreen(
                 modifier = Modifier.align(Alignment.TopCenter)
             )
         }
+    }
+
+    vehicleToDelete?.let { vehicle ->
+        AlertDialog(
+            onDismissRequest = { vehicleToDelete = null },
+            title = { Text(stringResource(R.string.delete_vehicle_title)) },
+            text = { Text(stringResource(R.string.delete_vehicle_message, vehicle.displayName)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        viewModel.deleteVehicle(vehicle)
+                        vehicleToDelete = null
+                    }
+                ) {
+                    Text(
+                        stringResource(R.string.delete),
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { vehicleToDelete = null }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
     }
 }
 
@@ -234,12 +270,16 @@ private fun TotalBalanceCard(totalBalance: Double) {
 @Composable
 private fun VehicleCard(
     vehicleSummary: VehicleWithTicketSummary,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
     onViewViolations: () -> Unit
 ) {
     val vehicle = vehicleSummary.vehicle
 
     Card(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onEdit),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surface
         ),
@@ -291,8 +331,16 @@ private fun VehicleCard(
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.End
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
+                IconButton(onClick = onDelete) {
+                    Icon(
+                        imageVector = Icons.Outlined.Delete,
+                        contentDescription = stringResource(R.string.delete_vehicle),
+                        tint = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
                 Button(
                     onClick = onViewViolations,
                     colors = ButtonDefaults.buttonColors(
