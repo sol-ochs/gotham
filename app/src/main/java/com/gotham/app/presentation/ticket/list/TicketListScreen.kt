@@ -116,7 +116,7 @@ fun TicketListScreen(
                             color = GoldenYellow
                         )
                         Text(
-                            text = "ALL VIOLATIONS",
+                            text = "TICKETS",
                             style = MaterialTheme.typography.labelSmall.copy(
                                 letterSpacing = 1.sp
                             ),

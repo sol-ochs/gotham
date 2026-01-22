@@ -348,7 +348,7 @@ private fun VehicleCard(
                         contentColor = Color.Black
                     )
                 ) {
-                    Text(stringResource(R.string.home_view_violations))
+                    Text(stringResource(R.string.home_view_tickets))
                 }
             }
         }

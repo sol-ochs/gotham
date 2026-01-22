@@ -94,5 +94,5 @@
     <string name="home_your_vehicles">Your Vehicles</string>
     <string name="home_add_new">+ Add New</string>
     <string name="home_add_vehicle">Add Vehicle</string>
-    <string name="home_view_violations">View Violations</string>
+    <string name="home_view_tickets">View Tickets</string>
 </resources>
