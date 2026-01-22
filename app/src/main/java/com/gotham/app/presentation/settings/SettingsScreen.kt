@@ -35,6 +35,7 @@ import com.gotham.app.presentation.theme.GoldenYellow
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Suppress("UNUSED_PARAMETER")
 fun SettingsScreen(
     onBack: () -> Unit
 ) {

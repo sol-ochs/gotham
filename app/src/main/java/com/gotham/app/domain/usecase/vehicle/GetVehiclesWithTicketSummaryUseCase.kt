@@ -5,6 +5,7 @@ import com.gotham.app.domain.repository.TicketRepository
 import com.gotham.app.domain.repository.VehicleRepository
 import com.gotham.app.presentation.home.VehicleWithTicketSummary
 import com.gotham.app.util.Constants.PAYABLE_TICKET_AGE_DAYS
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.flowOf
 import java.time.LocalDateTime
 import javax.inject.Inject
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class GetVehiclesWithTicketSummaryUseCase @Inject constructor(
     private val vehicleRepository: VehicleRepository,
     private val ticketRepository: TicketRepository

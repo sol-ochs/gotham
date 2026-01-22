@@ -22,11 +22,21 @@ interface TicketDao {
     @Query("SELECT * FROM tickets WHERE summons_number = :summonsNumber")
     fun observeTicketBySummonsNumber(summonsNumber: String): Flow<TicketEntity?>
 
-    @Query("SELECT * FROM tickets WHERE is_new = 1")
-    fun getNewTickets(): Flow<List<TicketEntity>>
+    @Query("""
+        SELECT * FROM tickets
+        WHERE is_new = 1
+        AND amount_due > 0
+        AND issue_date_time >= :thresholdDate
+    """)
+    fun getNewTickets(thresholdDate: String): Flow<List<TicketEntity>>
 
-    @Query("SELECT COUNT(*) FROM tickets WHERE is_new = 1")
-    fun getNewTicketCount(): Flow<Int>
+    @Query("""
+        SELECT COUNT(*) FROM tickets
+        WHERE is_new = 1
+        AND amount_due > 0
+        AND issue_date_time >= :thresholdDate
+    """)
+    fun getNewTicketCount(thresholdDate: String): Flow<Int>
 
     @Query("SELECT COUNT(*) FROM tickets WHERE is_new = 1 AND vehicle_id = :vehicleId")
     fun getNewTicketCountByVehicle(vehicleId: Long): Flow<Int>

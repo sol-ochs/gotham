@@ -10,7 +10,7 @@ import com.gotham.app.data.local.entity.VehicleEntity
 @Database(
     entities = [VehicleEntity::class, TicketEntity::class],
     version = 3,
-    exportSchema = true
+    exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun vehicleDao(): VehicleDao

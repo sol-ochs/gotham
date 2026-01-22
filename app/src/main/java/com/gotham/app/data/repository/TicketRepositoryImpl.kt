@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.map
 import retrofit2.HttpException
 import java.io.IOException
 import java.net.SocketTimeoutException
+import java.time.LocalDateTime
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -43,13 +44,13 @@ class TicketRepositoryImpl @Inject constructor(
             .map { it?.toDomain() }
     }
 
-    override fun getNewTickets(): Flow<List<Ticket>> {
-        return ticketDao.getNewTickets()
+    override fun getNewTickets(thresholdDate: LocalDateTime): Flow<List<Ticket>> {
+        return ticketDao.getNewTickets(thresholdDate.toString())
             .map { it.toDomainList() }
     }
 
-    override fun getNewTicketCount(): Flow<Int> {
-        return ticketDao.getNewTicketCount()
+    override fun getNewTicketCount(thresholdDate: LocalDateTime): Flow<Int> {
+        return ticketDao.getNewTicketCount(thresholdDate.toString())
     }
 
     override suspend fun markTicketAsSeen(summonsNumber: String) {
@@ -143,9 +144,6 @@ class TicketRepositoryImpl @Inject constructor(
 
     override suspend fun checkForNewTickets(vehicles: List<Vehicle>): Result<List<Ticket>> {
         return try {
-            // Mark all existing tickets as seen before fetching new ones
-            markAllTicketsAsSeen()
-
             val allNewTickets = mutableListOf<Ticket>()
 
             vehicles.forEach { vehicle ->

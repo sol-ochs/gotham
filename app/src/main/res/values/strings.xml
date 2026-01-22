@@ -87,7 +87,7 @@
     <string name="nav_settings">Settings</string>
 
     <!-- Home -->
-    <string name="home_total_balance_due">Total Balance Due</string>
+    <string name="home_total_balance_due">Total Amount Owed</string>
     <string name="home_your_vehicles">Your Vehicles</string>
     <string name="home_add_new">+ Add New</string>
     <string name="home_add_vehicle">Add Vehicle</string>

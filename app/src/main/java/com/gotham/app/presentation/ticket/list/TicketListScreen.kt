@@ -5,7 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -62,10 +64,13 @@ import com.gotham.app.R
 import com.gotham.app.domain.model.Ticket
 import com.gotham.app.presentation.theme.DarkerCardBackground
 import com.gotham.app.presentation.theme.GoldenYellow
+import com.gotham.app.util.Constants.PAYABLE_TICKET_AGE_DAYS
+import java.time.LocalDateTime
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Suppress("UNUSED_PARAMETER")
 fun TicketListScreen(
     onTicketClick: (String) -> Unit,
     onNavigateToSettings: () -> Unit,
@@ -140,25 +145,12 @@ fun TicketListScreen(
                             )
                         }
                     }
-                    BadgedBox(
-                        badge = {
-                            if (state.unseenCount > 0) {
-                                Badge(
-                                    containerColor = GoldenYellow,
-                                    contentColor = Color.Black
-                                ) {
-                                    Text(state.unseenCount.toString())
-                                }
-                            }
-                        }
-                    ) {
-                        IconButton(onClick = viewModel::refresh) {
-                            Icon(
-                                Icons.Default.Refresh,
-                                contentDescription = "Refresh",
-                                tint = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
+                    IconButton(onClick = viewModel::refresh) {
+                        Icon(
+                            Icons.Default.Refresh,
+                            contentDescription = "Refresh",
+                            tint = MaterialTheme.colorScheme.onSurface
+                        )
                     }
                 }
             )
@@ -367,7 +359,8 @@ private fun TicketCard(
                     modifier = Modifier.weight(1f),
                     color = MaterialTheme.colorScheme.onSurface
                 )
-                if (ticket.isNew) {
+                val threshold = LocalDateTime.now().minusDays(PAYABLE_TICKET_AGE_DAYS)
+                if (ticket.isNew && ticket.amountDue > 0 && ticket.issueDateTime.isAfter(threshold)) {
                     Badge(
                         containerColor = GoldenYellow,
                         contentColor = Color.Black,
@@ -426,6 +419,7 @@ private fun TotalAmountCard(totalAmount: Double) {
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant
             )
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = String.format(Locale.US, "$%.2f", totalAmount),
                 style = MaterialTheme.typography.headlineLarge.copy(

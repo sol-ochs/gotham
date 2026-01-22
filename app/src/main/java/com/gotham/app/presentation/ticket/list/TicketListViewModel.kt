@@ -9,6 +9,7 @@ import com.gotham.app.domain.model.ViolationType
 import com.gotham.app.domain.usecase.sync.RefreshTicketsUseCase
 import com.gotham.app.domain.usecase.ticket.GetTicketsUseCase
 import com.gotham.app.domain.usecase.ticket.GetUnseenTicketCountUseCase
+import com.gotham.app.domain.usecase.ticket.MarkAllTicketsAsSeenUseCase
 import com.gotham.app.domain.usecase.vehicle.GetVehiclesUseCase
 import com.gotham.app.domain.util.Result
 import com.gotham.app.presentation.navigation.Screen
@@ -28,6 +29,7 @@ class TicketListViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val getTicketsUseCase: GetTicketsUseCase,
     private val getUnseenTicketCountUseCase: GetUnseenTicketCountUseCase,
+    private val markAllTicketsAsSeenUseCase: MarkAllTicketsAsSeenUseCase,
     private val refreshTicketsUseCase: RefreshTicketsUseCase,
     private val getVehiclesUseCase: GetVehiclesUseCase
 ) : ViewModel() {
@@ -47,6 +49,7 @@ class TicketListViewModel @Inject constructor(
 
     private var allTickets: List<Ticket> = emptyList()
     private var allVehicles: List<Vehicle> = emptyList()
+    private var hasMarkedAsSeen = false
 
     init {
         observeVehicles()
@@ -69,6 +72,8 @@ class TicketListViewModel @Inject constructor(
                 getTicketsUseCase(),
                 getUnseenTicketCountUseCase()
             ) { tickets, unseenCount ->
+                Pair(tickets, unseenCount)
+            }.collect { (tickets, unseenCount) ->
                 allTickets = tickets
                 _state.update {
                     it.copy(
@@ -85,7 +90,11 @@ class TicketListViewModel @Inject constructor(
                         hiddenOlderUnpaidCount = countHiddenOlderUnpaid(tickets, it.selectedTypeFilter, it.selectedVehicleId)
                     )
                 }
-            }.collect {}
+                if (!hasMarkedAsSeen && tickets.isNotEmpty()) {
+                    hasMarkedAsSeen = true
+                    markAllTicketsAsSeenUseCase()
+                }
+            }
         }
     }
 
