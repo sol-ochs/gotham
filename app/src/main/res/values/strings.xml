@@ -77,6 +77,13 @@
     <string name="settings_version">Version %s</string>
     <string name="settings_last_check">Last check: %s</string>
     <string name="settings_last_check_never">Never</string>
+    <string name="settings_legal">Legal</string>
+    <string name="settings_privacy_policy">Privacy Policy</string>
+    <string name="settings_terms_of_service">Terms of Service</string>
+
+    <!-- Legal -->
+    <string name="privacy_policy_content">This app does not require an account. All vehicle information you enter is stored locally on your device and is never transmitted to external servers.\n\nTicket data is retrieved from NYC Open Data, a publicly available API operated by the City of New York. No personal information is shared with third parties.\n\nThis app does not collect analytics, usage data, or any form of tracking information.</string>
+    <string name="terms_of_service_content">This app is provided for informational purposes only and is not affiliated with, endorsed by, or connected to the City of New York or any NYC agency.\n\nNo guarantee is made regarding the accuracy, completeness, or timeliness of the data displayed. You are solely responsible for verifying all information through official NYC sources at nyc.gov.\n\nThe developers of this app shall not be held liable for any missed tickets, fines, penalties, or other consequences resulting from reliance on information provided by this app.\n\nBy using this app, you acknowledge and accept these terms.</string>
 
     <!-- Onboarding -->
     <string name="onboarding_title">Welcome to Gotham</string>

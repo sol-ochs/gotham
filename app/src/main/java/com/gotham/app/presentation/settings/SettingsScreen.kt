@@ -1,12 +1,16 @@
 package com.gotham.app.presentation.settings
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -17,6 +21,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -40,6 +45,8 @@ fun SettingsScreen(
     onBack: () -> Unit
 ) {
     var notificationsEnabled by remember { mutableStateOf(true) }
+    var showPrivacyPolicyDialog by remember { mutableStateOf(false) }
+    var showTermsOfServiceDialog by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
@@ -148,6 +155,90 @@ fun SettingsScreen(
                     )
                 )
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = stringResource(R.string.settings_legal),
+                style = MaterialTheme.typography.labelLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surface
+                ),
+                shape = RoundedCornerShape(12.dp)
+            ) {
+                ListItem(
+                    headlineContent = {
+                        Text(
+                            text = stringResource(R.string.settings_privacy_policy),
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
+                    colors = ListItemDefaults.colors(
+                        containerColor = Color.Transparent
+                    ),
+                    modifier = Modifier.clickable { showPrivacyPolicyDialog = true }
+                )
+                ListItem(
+                    headlineContent = {
+                        Text(
+                            text = stringResource(R.string.settings_terms_of_service),
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                    },
+                    colors = ListItemDefaults.colors(
+                        containerColor = Color.Transparent
+                    ),
+                    modifier = Modifier.clickable { showTermsOfServiceDialog = true }
+                )
+            }
         }
     }
+
+    if (showPrivacyPolicyDialog) {
+        LegalTextDialog(
+            title = stringResource(R.string.settings_privacy_policy),
+            content = stringResource(R.string.privacy_policy_content),
+            onDismiss = { showPrivacyPolicyDialog = false }
+        )
+    }
+
+    if (showTermsOfServiceDialog) {
+        LegalTextDialog(
+            title = stringResource(R.string.settings_terms_of_service),
+            content = stringResource(R.string.terms_of_service_content),
+            onDismiss = { showTermsOfServiceDialog = false }
+        )
+    }
+}
+
+@Composable
+private fun LegalTextDialog(
+    title: String,
+    content: String,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = {
+            Text(text = title)
+        },
+        text = {
+            Column(
+                modifier = Modifier.verticalScroll(rememberScrollState())
+            ) {
+                Text(text = content)
+            }
+        },
+        confirmButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.ok))
+            }
+        }
+    )
 }
