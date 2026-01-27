@@ -18,6 +18,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -25,6 +27,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.navArgument
 import com.gotham.app.R
+import com.gotham.app.data.worker.WorkManagerScheduler
 import com.gotham.app.presentation.home.HomeScreen
 import com.gotham.app.presentation.onboarding.OnboardingScreen
 import com.gotham.app.presentation.settings.SettingsScreen
@@ -35,7 +38,9 @@ import com.gotham.app.presentation.vehicle.add.AddEditVehicleScreen
 @Composable
 fun NavGraph(
     navController: NavHostController,
-    startDestination: String
+    startDestination: String,
+    dataStore: DataStore<Preferences>,
+    workManagerScheduler: WorkManagerScheduler
 ) {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentRoute = navBackStackEntry?.destination?.route
@@ -199,7 +204,9 @@ fun NavGraph(
             SettingsScreen(
                 onBack = {
                     navController.navigateUp()
-                }
+                },
+                dataStore = dataStore,
+                workManagerScheduler = workManagerScheduler
             )
         }
     }

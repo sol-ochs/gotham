@@ -25,9 +25,11 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -35,16 +37,31 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
 import com.gotham.app.R
+import com.gotham.app.data.worker.WorkManagerScheduler
 import com.gotham.app.presentation.theme.GoldenYellow
+import com.gotham.app.util.Constants
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Suppress("UNUSED_PARAMETER")
 fun SettingsScreen(
-    onBack: () -> Unit
+    onBack: () -> Unit,
+    dataStore: DataStore<Preferences>,
+    workManagerScheduler: WorkManagerScheduler
 ) {
-    var notificationsEnabled by remember { mutableStateOf(true) }
+    val scope = rememberCoroutineScope()
+    val notificationsKey = booleanPreferencesKey(Constants.PREF_NOTIFICATIONS_ENABLED)
+    val notificationsFlow = remember {
+        dataStore.data.map { prefs -> prefs[notificationsKey] != false }
+    }
+    val notificationsEnabled by notificationsFlow.collectAsState(initial = true)
     var showPrivacyPolicyDialog by remember { mutableStateOf(false) }
     var showTermsOfServiceDialog by remember { mutableStateOf(false) }
 
@@ -106,7 +123,18 @@ fun SettingsScreen(
                     trailingContent = {
                         Switch(
                             checked = notificationsEnabled,
-                            onCheckedChange = { notificationsEnabled = it },
+                            onCheckedChange = { enabled ->
+                                scope.launch {
+                                    dataStore.edit { prefs ->
+                                        prefs[notificationsKey] = enabled
+                                    }
+                                    if (enabled) {
+                                        workManagerScheduler.schedulePeriodicTicketCheck()
+                                    } else {
+                                        workManagerScheduler.cancelPeriodicTicketCheck()
+                                    }
+                                }
+                            },
                             colors = SwitchDefaults.colors(
                                 checkedThumbColor = Color.White,
                                 checkedTrackColor = GoldenYellow,
