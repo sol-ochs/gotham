@@ -10,6 +10,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.core.content.ContextCompat
 import androidx.datastore.core.DataStore
@@ -37,6 +38,8 @@ class MainActivity : ComponentActivity() {
 
         requestNotificationPermission()
 
+        val navigateTo = intent.getStringExtra("navigate_to")
+
         setContent {
             GothamTheme {
                 Surface(
@@ -44,6 +47,15 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     val navController = rememberNavController()
+
+                    LaunchedEffect(navigateTo) {
+                        navigateTo?.let { route ->
+                            navController.navigate(route) {
+                                popUpTo(Screen.Home.route) { inclusive = false }
+                            }
+                        }
+                    }
+
                     NavGraph(
                         navController = navController,
                         startDestination = Screen.Home.route,

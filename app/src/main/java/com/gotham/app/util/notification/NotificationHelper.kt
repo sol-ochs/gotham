@@ -22,22 +22,12 @@ class NotificationHelper @Inject constructor(
     fun showNewTicketsNotification(tickets: List<Ticket>) {
         if (tickets.isEmpty()) return
 
-        val title = if (tickets.size == 1) {
-            context.getString(R.string.notification_title_single_ticket)
-        } else {
-            context.getString(R.string.notification_title_multiple_tickets, tickets.size)
-        }
-
-        val content = if (tickets.size == 1) {
-            "${tickets.first().plate}: ${tickets.first().formattedViolation} (${tickets.first().formattedFineAmount})"
-        } else {
-            tickets.take(3).joinToString("\n") {
-                "${it.plate}: ${it.formattedViolation} (${it.formattedFineAmount})"
-            }
-        }
+        val title = if (tickets.size == 1) "New violation" else "New violations"
+        val content = "Click to view in app"
 
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("navigate_to", "ticket_list?statusFilter=UNPAID")
         }
 
         val pendingIntent = PendingIntent.getActivity(

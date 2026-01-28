@@ -5,8 +5,6 @@
     <!-- Notification -->
     <string name="notification_channel_name">Parking Tickets</string>
     <string name="notification_channel_description">Notifications for new parking tickets</string>
-    <string name="notification_title_multiple_tickets">%d new parking tickets</string>
-    <string name="notification_title_single_ticket">New parking ticket</string>
 
     <!-- Common -->
     <string name="ok">OK</string>
