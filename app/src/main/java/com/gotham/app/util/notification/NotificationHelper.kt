@@ -25,11 +25,11 @@ class NotificationHelper @Inject constructor(
         val title = if (tickets.size == 1) {
             context.getString(R.string.notification_title_single_ticket)
         } else {
-            context.getString(R.string.notification_title_new_tickets, tickets.size)
+            context.getString(R.string.notification_title_multiple_tickets, tickets.size)
         }
 
         val content = if (tickets.size == 1) {
-            "${tickets.first().formattedViolation} - ${tickets.first().formattedFineAmount}"
+            "${tickets.first().plate}: ${tickets.first().formattedViolation} (${tickets.first().formattedFineAmount})"
         } else {
             tickets.take(3).joinToString("\n") {
                 "${it.plate}: ${it.formattedViolation} (${it.formattedFineAmount})"
