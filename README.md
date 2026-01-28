@@ -40,7 +40,7 @@ Optional parameters:
 | Param        | Type   | Default                    | Description              |
 |--------------|--------|----------------------------|--------------------------|
 | ticket_count | int    | 1                          | Number of tickets (1-10) |
-| fine_amount  | double | 65.0                       | Fine amount in dollars   |
+| fine_amount  | float  | 65.0                       | Fine amount in dollars   |
 | violation    | string | NO PARKING-STREET CLEANING | Violation type           |
 
 ## Tech Stack

@@ -25,7 +25,7 @@ class DebugNotificationReceiver : BroadcastReceiver() {
         if (intent.action != ACTION_TEST_NOTIFICATION) return
 
         val ticketCount = intent.getIntExtra(EXTRA_TICKET_COUNT, 1).coerceIn(1, 10)
-        val fineAmount = intent.getDoubleExtra(EXTRA_FINE_AMOUNT, 65.0)
+        val fineAmount = intent.getFloatExtra(EXTRA_FINE_AMOUNT, 65f).toDouble()
         val violation = intent.getStringExtra(EXTRA_VIOLATION) ?: "NO PARKING-STREET CLEANING"
 
         Log.d(TAG, "Creating $ticketCount test ticket(s)")
