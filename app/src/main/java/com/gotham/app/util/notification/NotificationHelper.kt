@@ -49,8 +49,4 @@ class NotificationHelper @Inject constructor(
 
         notificationManager.notify(Constants.NOTIFICATION_ID_NEW_TICKETS, notification)
     }
-
-    fun cancelAllNotifications() {
-        notificationManager.cancelAll()
-    }
 }
