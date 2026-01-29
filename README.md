@@ -9,15 +9,6 @@ Android app that monitors NYC parking tickets for your vehicles and notifies you
 - Push notifications for new tickets
 - Offline support with local caching
 
-## Setup
-
-1. Clone and open in Android Studio
-2. (Optional) Get a free API token at [NYC Open Data](https://data.cityofnewyork.us/) for higher rate limits. Add to `local.properties`:
-   ```
-   NYC_API_TOKEN=your_token_here
-   ```
-3. Build and run
-
 ## Debugging
 
 ### Viewing Logs
@@ -26,22 +17,26 @@ Android app that monitors NYC parking tickets for your vehicles and notifies you
 adb logcat -c && adb logcat --pid=$(adb shell pidof com.gotham.app) -v color
 ```
 
-### Sending Test Notifications
+### Creating Test Tickets
 
-Debug builds include a BroadcastReceiver for testing notifications via ADB:
+Debug builds include a BroadcastReceiver for creating test tickets via ADB. Requires a vehicle created in the app.
 
 ```bash
-adb shell am broadcast -n com.gotham.app/.debug.DebugNotificationReceiver \
-  -a com.gotham.app.debug.TEST_NOTIFICATION \
-  --ei ticket_count 2 --ef fine_amount 115.0 --es violation "FIRE HYDRANT"
+adb shell am broadcast -n com.gotham.app/.debug.DebugTicketReceiver \
+  -a com.gotham.app.debug.TEST_TICKET \
+  --es plate "ABC1234" --ei ticket_count 2 --ef fine_amount 115.0 --es violation "FIRE HYDRANT"
 ```
-Optional parameters:
 
-| Param        | Type   | Default                    | Description              |
-|--------------|--------|----------------------------|--------------------------|
-| ticket_count | int    | 1                          | Number of tickets (1-10) |
-| fine_amount  | float  | 65.0                       | Fine amount in dollars   |
-| violation    | string | NO PARKING-STREET CLEANING | Violation type           |
+Parameters:
+
+| Param        | Type   | Required | Default                    | Description                          |
+|--------------|--------|----------|----------------------------|--------------------------------------|
+| plate        | string | Yes      | -                          | License plate of an existing vehicle |
+| ticket_count | int    | No       | 1                          | Number of tickets (1-10)             |
+| fine_amount  | float  | No       | 65.0                       | Fine amount in dollars               |
+| violation    | string | No       | NO PARKING-STREET CLEANING | Violation type                       |
+
+This inserts new tickets into the database for the specified vehicle, then shows a notification.
 
 ## Tech Stack
 

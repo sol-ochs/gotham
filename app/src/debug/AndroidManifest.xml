@@ -3,10 +3,10 @@
 
     <application>
         <receiver
-            android:name="com.gotham.app.debug.DebugNotificationReceiver"
+            android:name="com.gotham.app.debug.DebugTicketReceiver"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.gotham.app.debug.TEST_NOTIFICATION" />
+                <action android:name="com.gotham.app.debug.TEST_TICKET" />
             </intent-filter>
         </receiver>
     </application>

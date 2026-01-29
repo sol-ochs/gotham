@@ -36,6 +36,9 @@ interface VehicleDao {
     @Query("SELECT COUNT(*) FROM vehicles")
     fun observeVehicleCount(): Flow<Int>
 
+    @Query("SELECT * FROM vehicles WHERE license_plate = :plate LIMIT 1")
+    suspend fun getVehicleByPlate(plate: String): VehicleEntity?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertVehicle(vehicle: VehicleEntity): Long
 
