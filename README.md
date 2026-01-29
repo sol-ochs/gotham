@@ -1,6 +1,6 @@
-# This Is Fine
+# Gotham
 
-Android app that monitors NYC parking tickets for your vehicles and notifies you when new ones appear.
+An app to track your NYC parking tickets and get notify you when new ones appear.
 
 ## Features
 
