@@ -25,8 +25,8 @@
 -keepnames @com.squareup.moshi.JsonClass class *
 
 # Keep data classes
--keep class com.gotham.app.data.remote.dto.** { *; }
--keep class com.gotham.app.domain.model.** { *; }
+-keep class com.aurox.gotham.data.remote.dto.** { *; }
+-keep class com.aurox.gotham.domain.model.** { *; }
 
 # OkHttp
 -dontwarn okhttp3.internal.platform.**

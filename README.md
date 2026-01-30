@@ -14,7 +14,7 @@ An app to track your NYC parking tickets and get notified when new ones appear.
 ### Viewing Logs
 
 ```bash
-adb logcat -c && adb logcat --pid=$(adb shell pidof com.gotham.app) -v color
+adb logcat -c && adb logcat --pid=$(adb shell pidof com.aurox.gotham) -v color
 ```
 
 ### Creating Test Tickets
@@ -22,8 +22,8 @@ adb logcat -c && adb logcat --pid=$(adb shell pidof com.gotham.app) -v color
 Debug builds include a BroadcastReceiver for creating test tickets via ADB. Requires a vehicle created in the app.
 
 ```bash
-adb shell am broadcast -n com.gotham.app/.debug.DebugTicketReceiver \
-  -a com.gotham.app.debug.TEST_TICKET \
+adb shell am broadcast -n com.aurox.gotham/.debug.DebugTicketReceiver \
+  -a com.aurox.gotham.debug.TEST_TICKET \
   --es plate "ABC1234" --ei ticket_count 2 --ef fine_amount 115.0 --es violation "FIRE HYDRANT"
 ```
 

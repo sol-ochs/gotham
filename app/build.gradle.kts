@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.gotham.app"
+    namespace = "com.aurox.gotham"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.gotham.app"
+        applicationId = "com.aurox.gotham"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -25,6 +25,7 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
