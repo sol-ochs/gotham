@@ -10,10 +10,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface TicketDao {
-    @Query("SELECT * FROM tickets ORDER BY issue_date_time DESC")
+    @Query("SELECT * FROM tickets ORDER BY issue_date_time DESC, summons_number DESC")
     fun getAllTickets(): Flow<List<TicketEntity>>
 
-    @Query("SELECT * FROM tickets WHERE vehicle_id = :vehicleId ORDER BY issue_date_time DESC")
+    @Query("SELECT * FROM tickets WHERE vehicle_id = :vehicleId ORDER BY issue_date_time DESC, summons_number DESC")
     fun getTicketsByVehicleId(vehicleId: Long): Flow<List<TicketEntity>>
 
     @Query("SELECT * FROM tickets WHERE summons_number = :summonsNumber")
