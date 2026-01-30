@@ -20,10 +20,6 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
-
-        // Load NYC API token from gradle.properties
-        val nycApiToken: String = project.findProperty("NYC_API_TOKEN") as String? ?: ""
-        buildConfigField("String", "NYC_API_TOKEN", "\"$nycApiToken\"")
     }
 
     buildTypes {

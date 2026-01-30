@@ -4,7 +4,6 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.gotham.app.BuildConfig
 import com.gotham.app.data.remote.NycOpenDataApi
-import com.gotham.app.data.remote.interceptor.AppTokenInterceptor
 import com.gotham.app.util.Constants
 import dagger.Module
 import dagger.Provides
@@ -31,17 +30,8 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideAppTokenInterceptor(): AppTokenInterceptor {
-        return AppTokenInterceptor(BuildConfig.NYC_API_TOKEN)
-    }
-
-    @Provides
-    @Singleton
-    fun provideOkHttpClient(
-        appTokenInterceptor: AppTokenInterceptor
-    ): OkHttpClient {
+    fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
-            .addInterceptor(appTokenInterceptor)
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
                     level = if (BuildConfig.DEBUG) {

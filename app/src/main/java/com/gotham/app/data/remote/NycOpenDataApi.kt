@@ -15,7 +15,6 @@ interface NycOpenDataApi {
 
     companion object {
         const val BASE_URL = "https://data.cityofnewyork.us/resource/"
-        const val APP_TOKEN_HEADER = "X-App-Token"
 
         fun buildWhereClause(plate: String, state: String): String {
             val normalizedPlate = plate.uppercase().trim()
