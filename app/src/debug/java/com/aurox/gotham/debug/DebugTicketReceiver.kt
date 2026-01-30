@@ -58,7 +58,6 @@ class DebugTicketReceiver : BroadcastReceiver() {
                 val vehicle = entryPoint.vehicleDao().getVehicleByPlate(plate)
                 if (vehicle == null) {
                     Log.e(TAG, "Vehicle not found for plate: $plate")
-                    pendingResult.finish()
                     return@launch
                 }
 
