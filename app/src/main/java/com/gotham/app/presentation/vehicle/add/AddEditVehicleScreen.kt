@@ -13,6 +13,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -29,6 +30,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
@@ -57,6 +59,7 @@ import com.gotham.app.presentation.theme.GoldenYellow
 fun AddEditVehicleScreen(
     onNavigateBack: () -> Unit,
     onVehicleSaved: (Boolean) -> Unit,
+    onVehicleDeleted: () -> Unit = {},
     viewModel: AddEditVehicleViewModel = hiltViewModel()
 ) {
     val state by viewModel.state.collectAsStateWithLifecycle()
@@ -65,6 +68,7 @@ fun AddEditVehicleScreen(
 
     var stateExpanded by remember { mutableStateOf(false) }
     var vehicleTypeExpanded by remember { mutableStateOf(false) }
+    var showDeleteConfirmation by remember { mutableStateOf(false) }
 
     LaunchedEffect(state.error) {
         state.error?.let {
@@ -76,6 +80,12 @@ fun AddEditVehicleScreen(
     LaunchedEffect(state.isSaved) {
         if (state.isSaved) {
             onVehicleSaved(isFirstVehicle)
+        }
+    }
+
+    LaunchedEffect(state.isDeleted) {
+        if (state.isDeleted) {
+            onVehicleDeleted()
         }
     }
 
@@ -287,7 +297,48 @@ fun AddEditVehicleScreen(
                         )
                     }
                 }
+
+                if (state.vehicleId != null) {
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    TextButton(
+                        onClick = { showDeleteConfirmation = true },
+                        modifier = Modifier.fillMaxWidth(),
+                        enabled = !state.isLoading
+                    ) {
+                        Text(
+                            text = stringResource(R.string.delete_vehicle),
+                            color = MaterialTheme.colorScheme.error
+                        )
+                    }
+                }
             }
         }
+    }
+
+    if (showDeleteConfirmation) {
+        AlertDialog(
+            onDismissRequest = { showDeleteConfirmation = false },
+            title = { Text(stringResource(R.string.delete_vehicle_title)) },
+            text = { Text(stringResource(R.string.delete_vehicle_message, state.licensePlate)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showDeleteConfirmation = false
+                        viewModel.deleteVehicle()
+                    }
+                ) {
+                    Text(
+                        stringResource(R.string.delete),
+                        color = MaterialTheme.colorScheme.error
+                    )
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDeleteConfirmation = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
     }
 }

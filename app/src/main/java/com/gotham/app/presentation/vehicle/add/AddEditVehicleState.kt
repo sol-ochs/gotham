@@ -11,5 +11,6 @@ data class AddEditVehicleState(
     val selectedVehicleType: VehicleType = VehicleType.UNSPECIFIED,
     val isLoading: Boolean = false,
     val error: String? = null,
-    val isSaved: Boolean = false
+    val isSaved: Boolean = false,
+    val isDeleted: Boolean = false
 )

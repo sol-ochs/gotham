@@ -9,6 +9,7 @@ import com.gotham.app.domain.model.Vehicle
 import com.gotham.app.domain.model.VehicleType
 import com.gotham.app.domain.usecase.sync.CheckForNewTicketsUseCase
 import com.gotham.app.domain.usecase.vehicle.AddVehicleUseCase
+import com.gotham.app.domain.usecase.vehicle.DeleteVehicleUseCase
 import com.gotham.app.domain.usecase.vehicle.GetVehicleByIdUseCase
 import com.gotham.app.domain.usecase.vehicle.GetVehiclesUseCase
 import com.gotham.app.domain.util.Result
@@ -25,6 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class AddEditVehicleViewModel @Inject constructor(
     private val addVehicleUseCase: AddVehicleUseCase,
+    private val deleteVehicleUseCase: DeleteVehicleUseCase,
     private val getVehicleByIdUseCase: GetVehicleByIdUseCase,
     private val getVehiclesUseCase: GetVehiclesUseCase,
     private val checkForNewTicketsUseCase: CheckForNewTicketsUseCase,
@@ -144,5 +146,24 @@ class AddEditVehicleViewModel @Inject constructor(
 
     fun clearError() {
         _state.update { it.copy(error = null) }
+    }
+
+    fun deleteVehicle() {
+        val vehicleId = _state.value.vehicleId ?: return
+
+        viewModelScope.launch {
+            _state.update { it.copy(isLoading = true, error = null) }
+            try {
+                deleteVehicleUseCase(vehicleId)
+                _state.update { it.copy(isLoading = false, isDeleted = true) }
+            } catch (e: Exception) {
+                _state.update {
+                    it.copy(
+                        isLoading = false,
+                        error = e.message ?: "Failed to delete vehicle"
+                    )
+                }
+            }
+        }
     }
 }

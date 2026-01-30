@@ -181,6 +181,9 @@ fun NavGraph(
                     } else {
                         navController.navigateUp()
                     }
+                },
+                onVehicleDeleted = {
+                    navController.navigateUp()
                 }
             )
         }
