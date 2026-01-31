@@ -307,7 +307,7 @@ fun AddEditVehicleScreen(
                         enabled = !state.isLoading
                     ) {
                         Text(
-                            text = stringResource(R.string.delete_vehicle),
+                            text = stringResource(R.string.vehicle_delete_title),
                             color = MaterialTheme.colorScheme.error
                         )
                     }
@@ -319,8 +319,8 @@ fun AddEditVehicleScreen(
     if (showDeleteConfirmation) {
         AlertDialog(
             onDismissRequest = { showDeleteConfirmation = false },
-            title = { Text(stringResource(R.string.delete_vehicle_title)) },
-            text = { Text(stringResource(R.string.delete_vehicle_message, state.licensePlate)) },
+            title = { Text(stringResource(R.string.vehicle_delete_title)) },
+            text = { Text(stringResource(R.string.vehicle_delete_message, state.licensePlate)) },
             confirmButton = {
                 TextButton(
                     onClick = {
