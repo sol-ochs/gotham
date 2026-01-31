@@ -19,8 +19,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material3.Badge
-import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
@@ -113,25 +111,12 @@ fun HomeScreen(
                     }
                 },
                 actions = {
-                    BadgedBox(
-                        badge = {
-                            if (state.unseenTicketCount > 0) {
-                                Badge(
-                                    containerColor = GoldenYellow,
-                                    contentColor = Color.Black
-                                ) {
-                                    Text(state.unseenTicketCount.toString())
-                                }
-                            }
-                        }
-                    ) {
-                        IconButton(onClick = { onNavigateToTickets(null) }) {
-                            Icon(
-                                imageVector = Icons.Default.Notifications,
-                                contentDescription = "Notifications",
-                                tint = MaterialTheme.colorScheme.onSurface
-                            )
-                        }
+                    IconButton(onClick = { onNavigateToTickets(null) }) {
+                        Icon(
+                            imageVector = Icons.Default.Notifications,
+                            contentDescription = "Notifications",
+                            tint = if (state.unseenTicketCount > 0) GoldenYellow else MaterialTheme.colorScheme.onSurface
+                        )
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(
