@@ -9,15 +9,24 @@ Track your NYC parking tickets and get notified when new ones appear.
 - Push notifications for new tickets
 - Offline support with local caching
 
+## Stack
+
+- Kotlin
+- Jetpack Compose (UI)
+- Room (database)
+- Retrofit (networking)
+- WorkManager (background tasks)
+- Hilt (dependency injection)
+
 ## Debugging
 
-### Viewing Logs
+### View Log
 
 ```bash
 adb logcat -c && adb logcat --pid=$(adb shell pidof com.aurox.gotham) -v color
 ```
 
-### Creating Test Tickets
+### Push Test Tickets
 
 Debug builds include a BroadcastReceiver for creating test tickets via ADB. Requires a vehicle created in the app.
 
@@ -37,15 +46,6 @@ Parameters:
 | violation    | string | No       | NO PARKING-STREET CLEANING | Violation type                       |
 
 This inserts new tickets into the database for the specified vehicle, then shows a notification.
-
-## Tech Stack
-
-- Kotlin
-- Jetpack Compose (UI)
-- Room (database)
-- Retrofit (networking)
-- WorkManager (background tasks)
-- Hilt (dependency injection)
 
 ## License
 
