@@ -41,6 +41,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import com.aurox.gotham.BuildConfig
 import com.aurox.gotham.R
 import com.aurox.gotham.data.worker.WorkManagerScheduler
 import com.aurox.gotham.presentation.theme.GoldenYellow
@@ -174,7 +175,7 @@ fun SettingsScreen(
                     },
                     trailingContent = {
                         Text(
-                            text = "1.0.0",
+                            text = BuildConfig.VERSION_NAME,
                             color = MaterialTheme.colorScheme.onSurfaceVariant
                         )
                     },
