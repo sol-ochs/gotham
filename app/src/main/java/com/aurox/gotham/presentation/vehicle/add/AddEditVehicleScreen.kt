@@ -329,14 +329,14 @@ fun AddEditVehicleScreen(
                     }
                 ) {
                     Text(
-                        stringResource(R.string.delete),
+                        "Delete",
                         color = MaterialTheme.colorScheme.error
                     )
                 }
             },
             dismissButton = {
                 TextButton(onClick = { showDeleteConfirmation = false }) {
-                    Text(stringResource(R.string.cancel))
+                    Text("Cancel")
                 }
             }
         )

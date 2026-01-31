@@ -265,7 +265,7 @@ private fun LegalTextDialog(
         },
         confirmButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.ok))
+                Text("OK")
             }
         }
     )
