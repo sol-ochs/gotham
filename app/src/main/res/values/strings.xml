@@ -37,7 +37,7 @@
     <string name="delete_vehicle_title">Delete Vehicle</string>
     <string name="delete_vehicle_message">Delete \"%1$s\" and all its tickets?</string>
     <string name="vehicle_empty_state">No vehicles added yet</string>
-    <string name="vehicle_empty_state_description">Add a vehicle to start monitoring parking tickets</string>
+    <string name="vehicle_empty_state_description">Add a vehicle to see violations</string>
     <string name="vehicle_save_button">Save Vehicle</string>
 
     <!-- Ticket -->
