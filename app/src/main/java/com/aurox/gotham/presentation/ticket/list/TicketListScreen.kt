@@ -174,13 +174,13 @@ fun TicketListScreen(
                     )
                 }
                 if (state.selectedStatusFilter == TicketStatusFilter.UNPAID &&
-                    (state.hiddenOlderUnpaidCount > 0 || state.showOlderUnpaid)
+                    (state.hiddenOlderUnresolvedCount > 0 || state.showOlderUnresolved)
                 ) {
                     item {
-                        ShowOlderUnpaidToggle(
-                            hiddenCount = state.hiddenOlderUnpaidCount,
-                            showOlder = state.showOlderUnpaid,
-                            onToggle = viewModel::onToggleShowOlderUnpaid
+                        ShowOlderResolvedToggle(
+                            hiddenCount = state.hiddenOlderUnresolvedCount,
+                            showOlder = state.showOlderUnresolved,
+                            onToggle = viewModel::onToggleShowOlderResolved
                         )
                     }
                 }
@@ -427,20 +427,16 @@ private fun TotalAmountCard(totalAmount: Double) {
 }
 
 @Composable
-private fun ShowOlderUnpaidToggle(
-    hiddenCount: Int,
-    showOlder: Boolean,
-    onToggle: () -> Unit
-) {
+private fun ShowOlderResolvedToggle(hiddenCount: Int, showOlder: Boolean, onToggle: () -> Unit) {
     TextButton(
         onClick = onToggle,
         modifier = Modifier.fillMaxWidth()
     ) {
         Text(
             text = if (showOlder) {
-                "Hide older unpaid tickets"
+                "Hide older unresolved tickets"
             } else {
-                "Show $hiddenCount older unpaid (90+ days)"
+                "Show $hiddenCount older unresolved ($PAYABLE_TICKET_AGE_DAYS+ days)"
             },
             style = MaterialTheme.typography.bodyMedium,
             color = GoldenYellow

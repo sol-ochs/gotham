@@ -25,7 +25,7 @@ data class TicketListState(
     val selectedStatusFilter: TicketStatusFilter = TicketStatusFilter.ALL,
     val selectedVehicleId: Long? = null,
     val availableVehicles: List<Vehicle> = emptyList(),
-    val showOlderUnpaid: Boolean = false,
-    val hiddenOlderUnpaidCount: Int = 0,
+    val showOlderUnresolved: Boolean = false,
+    val hiddenOlderUnresolvedCount: Int = 0,
     val totalAmountOwed: Double = 0.0
 )

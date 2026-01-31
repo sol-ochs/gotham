@@ -80,12 +80,12 @@ class TicketListViewModel @Inject constructor(
                             it.selectedTypeFilter,
                             it.selectedStatusFilter,
                             it.selectedVehicleId,
-                            it.showOlderUnpaid
+                            it.showOlderUnresolved
                         ),
                         unseenCount = unseenCount,
                         isLoading = false,
-                        totalAmountOwed = calculateTotalAmountOwed(tickets, it.selectedVehicleId, it.showOlderUnpaid),
-                        hiddenOlderUnpaidCount = countHiddenOlderUnpaid(tickets, it.selectedTypeFilter, it.selectedVehicleId)
+                        totalAmountOwed = calculateTotalAmountOwed(tickets, it.selectedVehicleId, it.showOlderUnresolved),
+                        hiddenOlderUnresolvedCount = countHiddenOlderUnresolved(tickets, it.selectedTypeFilter, it.selectedVehicleId)
                     )
                 }
             }
@@ -96,8 +96,8 @@ class TicketListViewModel @Inject constructor(
         _state.update {
             it.copy(
                 selectedTypeFilter = filter,
-                tickets = applyFilters(allTickets, filter, it.selectedStatusFilter, it.selectedVehicleId, it.showOlderUnpaid),
-                hiddenOlderUnpaidCount = countHiddenOlderUnpaid(allTickets, filter, it.selectedVehicleId)
+                tickets = applyFilters(allTickets, filter, it.selectedStatusFilter, it.selectedVehicleId, it.showOlderUnresolved),
+                hiddenOlderUnresolvedCount = countHiddenOlderUnresolved(allTickets, filter, it.selectedVehicleId)
             )
         }
     }
@@ -106,7 +106,7 @@ class TicketListViewModel @Inject constructor(
         _state.update {
             it.copy(
                 selectedStatusFilter = filter,
-                showOlderUnpaid = false,
+                showOlderUnresolved = false,
                 tickets = applyFilters(allTickets, it.selectedTypeFilter, filter, it.selectedVehicleId, false)
             )
         }
@@ -116,18 +116,18 @@ class TicketListViewModel @Inject constructor(
         _state.update {
             it.copy(
                 selectedVehicleId = vehicleId,
-                tickets = applyFilters(allTickets, it.selectedTypeFilter, it.selectedStatusFilter, vehicleId, it.showOlderUnpaid),
-                totalAmountOwed = calculateTotalAmountOwed(allTickets, vehicleId, it.showOlderUnpaid),
-                hiddenOlderUnpaidCount = countHiddenOlderUnpaid(allTickets, it.selectedTypeFilter, vehicleId)
+                tickets = applyFilters(allTickets, it.selectedTypeFilter, it.selectedStatusFilter, vehicleId, it.showOlderUnresolved),
+                totalAmountOwed = calculateTotalAmountOwed(allTickets, vehicleId, it.showOlderUnresolved),
+                hiddenOlderUnresolvedCount = countHiddenOlderUnresolved(allTickets, it.selectedTypeFilter, vehicleId)
             )
         }
     }
 
-    fun onToggleShowOlderUnpaid() {
-        val newValue = !_state.value.showOlderUnpaid
+    fun onToggleShowOlderResolved() {
+        val newValue = !_state.value.showOlderUnresolved
         _state.update {
             it.copy(
-                showOlderUnpaid = newValue,
+                showOlderUnresolved = newValue,
                 tickets = applyFilters(allTickets, it.selectedTypeFilter, it.selectedStatusFilter, it.selectedVehicleId, newValue),
                 totalAmountOwed = calculateTotalAmountOwed(allTickets, it.selectedVehicleId, newValue)
             )
@@ -139,7 +139,7 @@ class TicketListViewModel @Inject constructor(
         typeFilter: TicketTypeFilter,
         statusFilter: TicketStatusFilter,
         vehicleId: Long?,
-        showOlderUnpaid: Boolean
+        showOlderUnresolved: Boolean
     ): List<Ticket> {
         val threshold = LocalDateTime.now().minusDays(PAYABLE_TICKET_AGE_DAYS)
         val vehiclePlate = vehicleId?.let { id -> allVehicles.find { it.id == id }?.licensePlate }
@@ -163,7 +163,7 @@ class TicketListViewModel @Inject constructor(
                 }
             }
             .filter { ticket ->
-                if (statusFilter == TicketStatusFilter.UNPAID && !showOlderUnpaid) {
+                if (statusFilter == TicketStatusFilter.UNPAID && !showOlderUnresolved) {
                     ticket.issueDateTime.isAfter(threshold)
                 } else {
                     true
@@ -171,7 +171,7 @@ class TicketListViewModel @Inject constructor(
             }
     }
 
-    private fun countHiddenOlderUnpaid(tickets: List<Ticket>, typeFilter: TicketTypeFilter, vehicleId: Long?): Int {
+    private fun countHiddenOlderUnresolved(tickets: List<Ticket>, typeFilter: TicketTypeFilter, vehicleId: Long?): Int {
         val threshold = LocalDateTime.now().minusDays(PAYABLE_TICKET_AGE_DAYS)
         val vehiclePlate = vehicleId?.let { id -> allVehicles.find { it.id == id }?.licensePlate }
 
@@ -187,7 +187,7 @@ class TicketListViewModel @Inject constructor(
         }
     }
 
-    private fun calculateTotalAmountOwed(tickets: List<Ticket>, vehicleId: Long?, showOlderUnpaid: Boolean): Double {
+    private fun calculateTotalAmountOwed(tickets: List<Ticket>, vehicleId: Long?, showOlderUnresolved: Boolean): Double {
         val threshold = LocalDateTime.now().minusDays(PAYABLE_TICKET_AGE_DAYS)
         val vehiclePlate = vehicleId?.let { id -> allVehicles.find { it.id == id }?.licensePlate }
 
@@ -197,7 +197,7 @@ class TicketListViewModel @Inject constructor(
             }
             .filter { !it.isPaid }
             .filter { ticket ->
-                if (showOlderUnpaid) true else ticket.issueDateTime.isAfter(threshold)
+                if (showOlderUnresolved) true else ticket.issueDateTime.isAfter(threshold)
             }
             .sumOf { it.amountDue }
     }
