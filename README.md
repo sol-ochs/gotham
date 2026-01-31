@@ -1,11 +1,11 @@
 # Gotham
 
-An app to track your NYC parking tickets and get notified when new ones appear.
+Track your NYC parking tickets and get notified when new ones appear.
 
 ## Features
 
 - Track up to 5 vehicles
-- Background checks every 6 hours
+- Daily background checks at 8am
 - Push notifications for new tickets
 - Offline support with local caching
 

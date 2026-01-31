@@ -8,6 +8,9 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
 import com.aurox.gotham.util.Constants
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.LocalTime
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -22,10 +25,13 @@ class WorkManagerScheduler @Inject constructor(
             .setRequiresBatteryNotLow(true)
             .build()
 
+        val initialDelay = calculateDelayUntilNextCheckTime()
+
         val workRequest = PeriodicWorkRequestBuilder<TicketCheckWorker>(
             intervalHours, TimeUnit.HOURS,
             Constants.WORK_FLEX_INTERVAL_MINUTES, TimeUnit.MINUTES
         )
+            .setInitialDelay(initialDelay.toMinutes(), TimeUnit.MINUTES)
             .setConstraints(constraints)
             .setBackoffCriteria(
                 BackoffPolicy.EXPONENTIAL,
@@ -36,9 +42,19 @@ class WorkManagerScheduler @Inject constructor(
 
         workManager.enqueueUniquePeriodicWork(
             TicketCheckWorker.WORK_NAME,
-            ExistingPeriodicWorkPolicy.KEEP,
+            ExistingPeriodicWorkPolicy.UPDATE,
             workRequest
         )
+    }
+
+    private fun calculateDelayUntilNextCheckTime(): Duration {
+        val now = LocalDateTime.now()
+        val targetTime = LocalTime.of(Constants.DEFAULT_CHECK_HOUR, 0)
+        var nextRun = now.toLocalDate().atTime(targetTime)
+        if (now >= nextRun) {
+            nextRun = nextRun.plusDays(1)
+        }
+        return Duration.between(now, nextRun)
     }
 
     fun cancelPeriodicTicketCheck() {

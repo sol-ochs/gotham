@@ -9,7 +9,8 @@ object Constants {
     const val DATABASE_NAME = "gotham_db"
 
     // WorkManager
-    const val DEFAULT_CHECK_INTERVAL_HOURS = 6L
+    const val DEFAULT_CHECK_INTERVAL_HOURS = 24L
+    const val DEFAULT_CHECK_HOUR = 8
     const val WORK_FLEX_INTERVAL_MINUTES = 15L
 
     // Vehicle
