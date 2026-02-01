@@ -1,7 +1,6 @@
 package com.aurox.gotham.di
 
 import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import com.aurox.gotham.BuildConfig
 import com.aurox.gotham.data.remote.NycOpenDataApi
 import com.aurox.gotham.util.Constants
@@ -24,7 +23,6 @@ object NetworkModule {
     @Singleton
     fun provideMoshi(): Moshi {
         return Moshi.Builder()
-            .add(KotlinJsonAdapterFactory())
             .build()
     }
 
