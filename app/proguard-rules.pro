@@ -33,3 +33,11 @@
 -dontwarn org.conscrypt.**
 -dontwarn org.bouncycastle.**
 -dontwarn org.openjsse.**
+
+# Retrofit with R8 full mode - keep generic signatures
+-keep,allowobfuscation,allowshrinking interface retrofit2.Call
+-keep,allowobfuscation,allowshrinking class retrofit2.Response
+-keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+
+# Keep Retrofit API interfaces
+-keep,allowobfuscation,allowshrinking interface com.aurox.gotham.data.remote.NycOpenDataApi
