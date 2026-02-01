@@ -24,8 +24,9 @@
 }
 -keepnames @com.squareup.moshi.JsonClass class *
 
-# Keep data classes
+# Keep data classes and Moshi generated adapters
 -keep class com.aurox.gotham.data.remote.dto.** { *; }
+-keep class **JsonAdapter { *; }
 -keep class com.aurox.gotham.domain.model.** { *; }
 
 # OkHttp
