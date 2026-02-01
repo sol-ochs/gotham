@@ -1,5 +1,6 @@
 package com.aurox.gotham.presentation.navigation
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -51,6 +52,7 @@ fun NavGraph(
     ) || currentRoute?.startsWith("ticket_list") == true
 
     Scaffold(
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
         bottomBar = {
             if (showBottomBar) {
                 val navItemColors = NavigationBarItemDefaults.colors(
