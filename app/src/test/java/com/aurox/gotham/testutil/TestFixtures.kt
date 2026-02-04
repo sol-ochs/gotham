@@ -1,6 +1,5 @@
 package com.aurox.gotham.testutil
 
-import com.aurox.gotham.data.local.entity.TicketEntity
 import com.aurox.gotham.data.remote.dto.TicketDto
 import com.aurox.gotham.domain.model.Ticket
 import com.aurox.gotham.domain.model.UsState
