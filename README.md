@@ -1,6 +1,6 @@
 # Gotham
 
-Track your NYC parking tickets and get notified when new ones appear.
+Gotham is a native Android app (Kotlin) that tracks NYC parking tickets via the NYC Open Data API. Users can register up to 5 vehicles and receive daily notifications when new tickets appear.
 
 ## Features
 
@@ -9,43 +9,46 @@ Track your NYC parking tickets and get notified when new ones appear.
 - Push notifications for new tickets
 - Offline support with local caching
 
-## Stack
+## Build Commands
 
-- Kotlin
-- Jetpack Compose (UI)
-- Room (database)
-- Retrofit (networking)
-- WorkManager (background tasks)
-- Hilt (dependency injection)
+```bash
+./gradlew assembleDebug        # Debug build
+./gradlew assembleRelease      # Release build (requires keystore.properties)
+./gradlew installDebug         # Build and install on connected device
+./gradlew test                 # Run unit tests
+```
 
 ## Debugging
 
-### View Log
-
+View logs for the app:
 ```bash
 adb logcat -c && adb logcat --pid=$(adb shell pidof com.aurox.gotham) -v color
 ```
 
-### Push Test Tickets
-
-Debug builds include a BroadcastReceiver for creating test tickets via ADB. Requires a vehicle created in the app.
-
+Create test tickets (debug builds only):
 ```bash
 adb shell am broadcast -n com.aurox.gotham/.debug.DebugTicketReceiver \
   -a com.aurox.gotham.debug.TEST_TICKET \
   --es plate "ABC1234" --ei ticket_count 2 --ef fine_amount 115.0 --es violation "'FIRE HYDRANT'"
 ```
 
-Parameters:
+## Architecture
 
-| Param        | Type   | Required | Default                    | Description                          |
-|--------------|--------|----------|----------------------------|--------------------------------------|
-| plate        | string | Yes      | -                          | License plate of an existing vehicle |
-| ticket_count | int    | No       | 1                          | Number of tickets (1-10)             |
-| fine_amount  | float  | No       | 65.0                       | Fine amount in dollars               |
-| violation    | string | No       | NO PARKING-STREET CLEANING | Violation type                       |
+Clean Architecture with MVVM:
 
-This inserts new tickets into the database for the specified vehicle, then shows a notification.
+- **domain/** - Business logic: models (Ticket, Vehicle), repository interfaces, use cases organized by feature (vehicle/, ticket/, sync/)
+- **data/** - Data layer: Room database (local/), Retrofit API client (remote/), repository implementations, WorkManager workers
+- **presentation/** - UI layer: Jetpack Compose screens, ViewModels with State objects, navigation
+- **di/** - Hilt dependency injection modules
+
+## Key Technical Details
+
+- **UI**: 100% Jetpack Compose with Material3, dark mode only
+- **Database**: Room
+- **Networking**: Retrofit + Moshi for NYC Open Data API (30s timeout)
+- **Background sync**: WorkManager schedules daily ticket checks
+- **Preferences**: DataStore for user settings
+- **Release signing**: Configured via `keystore.properties`
 
 ## License
 
