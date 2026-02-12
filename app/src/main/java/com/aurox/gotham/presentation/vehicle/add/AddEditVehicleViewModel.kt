@@ -6,7 +6,6 @@ import androidx.lifecycle.viewModelScope
 import com.aurox.gotham.data.worker.WorkManagerScheduler
 import com.aurox.gotham.domain.model.UsState
 import com.aurox.gotham.domain.model.Vehicle
-import com.aurox.gotham.domain.model.VehicleType
 import com.aurox.gotham.domain.usecase.sync.CheckForNewTicketsUseCase
 import com.aurox.gotham.domain.usecase.vehicle.AddVehicleUseCase
 import com.aurox.gotham.domain.usecase.vehicle.DeleteVehicleUseCase
@@ -65,7 +64,6 @@ class AddEditVehicleViewModel @Inject constructor(
                         licensePlate = vehicle.licensePlate,
                         nickname = vehicle.nickname ?: "",
                         selectedState = vehicle.state,
-                        selectedVehicleType = vehicle.vehicleType,
                         isLoading = false
                     )
                 }
@@ -92,10 +90,6 @@ class AddEditVehicleViewModel @Inject constructor(
         _state.update { it.copy(selectedState = state) }
     }
 
-    fun onVehicleTypeSelected(type: VehicleType) {
-        _state.update { it.copy(selectedVehicleType = type) }
-    }
-
     fun saveVehicle() {
         viewModelScope.launch {
             val currentState = _state.value
@@ -111,7 +105,6 @@ class AddEditVehicleViewModel @Inject constructor(
                 id = currentState.vehicleId ?: 0,
                 licensePlate = currentState.licensePlate,
                 state = currentState.selectedState,
-                vehicleType = currentState.selectedVehicleType,
                 nickname = currentState.nickname.takeIf { it.isNotBlank() }
             )
 
