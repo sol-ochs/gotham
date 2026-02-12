@@ -55,6 +55,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -169,21 +170,27 @@ fun TicketListScreen(
                 item {
                     TotalAmountCard(totalAmount = state.totalAmountOwed)
                 }
-                items(state.tickets, key = { it.summonsNumber }) { ticket ->
-                    TicketCard(
-                        ticket = ticket,
-                        onClick = { onTicketClick(ticket.summonsNumber) }
-                    )
-                }
-                if (state.selectedStatusFilter == TicketStatusFilter.UNPAID &&
-                    (state.hiddenOlderUnresolvedCount > 0 || state.showOlderUnresolved)
-                ) {
+                if (state.tickets.isEmpty()) {
                     item {
-                        ShowOlderResolvedToggle(
-                            hiddenCount = state.hiddenOlderUnresolvedCount,
-                            showOlder = state.showOlderUnresolved,
-                            onToggle = viewModel::onToggleShowOlderResolved
+                        EmptyTicketsCard()
+                    }
+                } else {
+                    items(state.tickets, key = { it.summonsNumber }) { ticket ->
+                        TicketCard(
+                            ticket = ticket,
+                            onClick = { onTicketClick(ticket.summonsNumber) }
                         )
+                    }
+                    if (state.selectedStatusFilter == TicketStatusFilter.UNPAID &&
+                        (state.hiddenOlderUnresolvedCount > 0 || state.showOlderUnresolved)
+                    ) {
+                        item {
+                            ShowOlderResolvedToggle(
+                                hiddenCount = state.hiddenOlderUnresolvedCount,
+                                showOlder = state.showOlderUnresolved,
+                                onToggle = viewModel::onToggleShowOlderResolved
+                            )
+                        }
                     }
                 }
             }
@@ -423,6 +430,38 @@ private fun TotalAmountCard(totalAmount: Double) {
                     fontWeight = FontWeight.Bold
                 ),
                 color = GoldenYellow
+            )
+        }
+    }
+}
+
+@Composable
+private fun EmptyTicketsCard() {
+    Card(
+        modifier = Modifier.fillMaxWidth(),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surface
+        ),
+        shape = RoundedCornerShape(12.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(32.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            Text(
+                text = stringResource(R.string.ticket_empty_state),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+                textAlign = TextAlign.Center
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = stringResource(R.string.ticket_empty_state_description),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center
             )
         }
     }
