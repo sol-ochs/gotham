@@ -16,13 +16,7 @@ Gotham is a native Android app (Kotlin) that tracks NYC parking tickets via the 
 ./gradlew assembleRelease       # Release build (requires keystore.properties)
 ./gradlew installDebug          # Build and install on connected device
 ./gradlew test                  # Run unit tests
-./gradlew connectedAndroidTest  # Run instrumentation tests (device/emulator)
 ```
-
-## Testing Layout
-
-- `app/src/test/java`: JVM unit tests (fast, no Android runtime)
-- `app/src/androidTest/java`: instrumentation tests (Android runtime), including Room migration tests
 
 ## Debugging
 
