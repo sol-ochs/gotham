@@ -20,7 +20,6 @@
     <string name="vehicle_nickname_hint">e.g., My Honda, Work Car</string>
     <string name="vehicle_license_plate">License Plate</string>
     <string name="vehicle_state">State</string>
-    <string name="vehicle_type">Vehicle Type</string>
     <string name="vehicle_limit_reached">Maximum 5 vehicles allowed</string>
     <string name="vehicle_delete_title">Delete Vehicle</string>
     <string name="vehicle_delete_message">Delete \"%1$s\" and all its tickets?</string>
