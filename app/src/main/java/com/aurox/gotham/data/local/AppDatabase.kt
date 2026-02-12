@@ -9,7 +9,7 @@ import com.aurox.gotham.data.local.entity.VehicleEntity
 
 @Database(
     entities = [VehicleEntity::class, TicketEntity::class],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

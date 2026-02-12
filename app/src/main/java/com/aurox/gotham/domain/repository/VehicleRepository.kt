@@ -14,4 +14,9 @@ interface VehicleRepository {
     suspend fun deleteVehicle(vehicle: Vehicle)
     suspend fun deleteVehicleById(vehicleId: Long)
     suspend fun canAddVehicle(): Boolean
+    suspend fun existsByPlateAndState(
+        plate: String,
+        stateCode: String,
+        excludeVehicleId: Long? = null
+    ): Boolean
 }

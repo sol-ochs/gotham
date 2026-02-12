@@ -2,9 +2,15 @@ package com.aurox.gotham.data.local.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "vehicles")
+@Entity(
+    tableName = "vehicles",
+    indices = [
+        Index(value = ["license_plate", "state"], unique = true)
+    ]
+)
 data class VehicleEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,

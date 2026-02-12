@@ -58,4 +58,16 @@ class VehicleRepositoryImpl @Inject constructor(
     override suspend fun canAddVehicle(): Boolean {
         return getVehicleCount() < Constants.MAX_VEHICLES
     }
+
+    override suspend fun existsByPlateAndState(
+        plate: String,
+        stateCode: String,
+        excludeVehicleId: Long?
+    ): Boolean {
+        return vehicleDao.existsByPlateAndState(
+            plate = plate.trim().uppercase(),
+            state = stateCode.trim().uppercase(),
+            excludeVehicleId = excludeVehicleId
+        )
+    }
 }

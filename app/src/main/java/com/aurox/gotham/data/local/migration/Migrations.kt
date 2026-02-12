@@ -32,5 +32,79 @@ object Migrations {
         }
     }
 
-    val ALL: Array<Migration> = arrayOf(MIGRATION_3_4)
+    val MIGRATION_4_5 = object : Migration(4, 5) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
+                """
+                UPDATE vehicles
+                SET license_plate = UPPER(TRIM(license_plate)),
+                    state = UPPER(TRIM(state))
+                """.trimIndent()
+            )
+
+            db.execSQL(
+                """
+                CREATE TABLE IF NOT EXISTS vehicle_duplicate_map (
+                    duplicate_id INTEGER PRIMARY KEY NOT NULL,
+                    canonical_id INTEGER NOT NULL
+                )
+                """.trimIndent()
+            )
+
+            db.execSQL(
+                """
+                INSERT INTO vehicle_duplicate_map (duplicate_id, canonical_id)
+                SELECT v.id AS duplicate_id,
+                       (
+                           SELECT MIN(v2.id)
+                           FROM vehicles v2
+                           WHERE v2.license_plate = v.license_plate
+                             AND v2.state = v.state
+                       ) AS canonical_id
+                FROM vehicles v
+                WHERE v.id != (
+                    SELECT MIN(v3.id)
+                    FROM vehicles v3
+                    WHERE v3.license_plate = v.license_plate
+                      AND v3.state = v.state
+                )
+                """.trimIndent()
+            )
+
+            db.execSQL(
+                """
+                UPDATE tickets
+                SET vehicle_id = (
+                    SELECT canonical_id
+                    FROM vehicle_duplicate_map
+                    WHERE duplicate_id = tickets.vehicle_id
+                )
+                WHERE vehicle_id IN (
+                    SELECT duplicate_id FROM vehicle_duplicate_map
+                )
+                """.trimIndent()
+            )
+
+            db.execSQL(
+                """
+                DELETE FROM vehicles
+                WHERE id IN (
+                    SELECT duplicate_id FROM vehicle_duplicate_map
+                )
+                """.trimIndent()
+            )
+
+            db.execSQL("DROP TABLE vehicle_duplicate_map")
+
+            db.execSQL(
+                """
+                CREATE UNIQUE INDEX IF NOT EXISTS
+                index_vehicles_license_plate_state
+                ON vehicles(license_plate, state)
+                """.trimIndent()
+            )
+        }
+    }
+
+    val ALL: Array<Migration> = arrayOf(MIGRATION_3_4, MIGRATION_4_5)
 }

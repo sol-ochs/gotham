@@ -39,6 +39,22 @@ interface VehicleDao {
     @Query("SELECT * FROM vehicles WHERE license_plate = :plate LIMIT 1")
     suspend fun getVehicleByPlate(plate: String): VehicleEntity?
 
+    @Query(
+        """
+        SELECT EXISTS(
+            SELECT 1 FROM vehicles
+            WHERE license_plate = :plate
+            AND state = :state
+            AND (:excludeVehicleId IS NULL OR id != :excludeVehicleId)
+        )
+        """
+    )
+    suspend fun existsByPlateAndState(
+        plate: String,
+        state: String,
+        excludeVehicleId: Long?
+    ): Boolean
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertVehicle(vehicle: VehicleEntity): Long
 
