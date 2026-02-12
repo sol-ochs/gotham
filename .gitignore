@@ -48,8 +48,8 @@ google-services.json
 # Mac
 .DS_Store
 
-# Claude
+# AI tools
 .claude/
-ISSUES.md
+TODO.md
 /CLAUDE.md
 AGENTS.md
