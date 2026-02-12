@@ -4,7 +4,6 @@ import com.aurox.gotham.data.remote.dto.TicketDto
 import com.aurox.gotham.domain.model.Ticket
 import com.aurox.gotham.domain.model.UsState
 import com.aurox.gotham.domain.model.Vehicle
-import com.aurox.gotham.domain.model.VehicleType
 import java.time.LocalDateTime
 
 fun createTicket(
@@ -81,7 +80,6 @@ fun createVehicle(
     id: Long = 0L,
     licensePlate: String = "ABC1234",
     state: UsState = UsState.NY,
-    vehicleType: VehicleType = VehicleType.PASSENGER,
     nickname: String? = null,
     createdAt: Long = 1000L,
     updatedAt: Long = 1000L
@@ -89,7 +87,6 @@ fun createVehicle(
     id = id,
     licensePlate = licensePlate,
     state = state,
-    vehicleType = vehicleType,
     nickname = nickname,
     createdAt = createdAt,
     updatedAt = updatedAt

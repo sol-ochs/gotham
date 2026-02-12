@@ -15,9 +15,6 @@ data class VehicleEntity(
     @ColumnInfo(name = "state")
     val state: String,
 
-    @ColumnInfo(name = "vehicle_type")
-    val vehicleType: String,
-
     @ColumnInfo(name = "nickname")
     val nickname: String? = null,
 

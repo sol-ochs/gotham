@@ -50,7 +50,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.aurox.gotham.R
 import com.aurox.gotham.domain.model.UsState
-import com.aurox.gotham.domain.model.VehicleType
 import com.aurox.gotham.presentation.theme.BlueAccent
 import com.aurox.gotham.presentation.theme.GoldenYellow
 
@@ -67,7 +66,6 @@ fun AddEditVehicleScreen(
     val snackbarHostState = remember { SnackbarHostState() }
 
     var stateExpanded by remember { mutableStateOf(false) }
-    var vehicleTypeExpanded by remember { mutableStateOf(false) }
     var showDeleteConfirmation by remember { mutableStateOf(false) }
 
     LaunchedEffect(state.error) {
@@ -221,51 +219,6 @@ fun AddEditVehicleScreen(
                                 onClick = {
                                     viewModel.onStateSelected(usState)
                                     stateExpanded = false
-                                }
-                            )
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Text(
-                    text = stringResource(R.string.vehicle_type),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                ExposedDropdownMenuBox(
-                    expanded = vehicleTypeExpanded,
-                    onExpandedChange = { vehicleTypeExpanded = !vehicleTypeExpanded && !state.isLoading }
-                ) {
-                    OutlinedTextField(
-                        value = state.selectedVehicleType.displayName,
-                        onValueChange = {},
-                        readOnly = true,
-                        trailingIcon = {
-                            ExposedDropdownMenuDefaults.TrailingIcon(expanded = vehicleTypeExpanded)
-                        },
-                        colors = textFieldColors,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .menuAnchor(),
-                        enabled = !state.isLoading,
-                        shape = RoundedCornerShape(12.dp)
-                    )
-
-                    ExposedDropdownMenu(
-                        expanded = vehicleTypeExpanded,
-                        onDismissRequest = { vehicleTypeExpanded = false }
-                    ) {
-                        val sortedTypes = listOf(VehicleType.UNSPECIFIED) +
-                            VehicleType.entries.filter { it != VehicleType.UNSPECIFIED }
-                        sortedTypes.forEach { type ->
-                            DropdownMenuItem(
-                                text = { Text(type.displayName) },
-                                onClick = {
-                                    viewModel.onVehicleTypeSelected(type)
-                                    vehicleTypeExpanded = false
                                 }
                             )
                         }
