@@ -27,7 +27,7 @@ object DatabaseModule {
             AppDatabase::class.java,
             Constants.DATABASE_NAME
         )
-            .fallbackToDestructiveMigration()
+            .addMigrations(*com.aurox.gotham.data.local.migration.Migrations.ALL)
             .build()
     }
 
