@@ -207,9 +207,6 @@ fun NavGraph(
 
         composable(Screen.Settings.route) {
             SettingsScreen(
-                onBack = {
-                    navController.navigateUp()
-                },
                 dataStore = dataStore,
                 workManagerScheduler = workManagerScheduler
             )

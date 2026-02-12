@@ -52,9 +52,7 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-@Suppress("UNUSED_PARAMETER")
 fun SettingsScreen(
-    onBack: () -> Unit,
     dataStore: DataStore<Preferences>,
     workManagerScheduler: WorkManagerScheduler
 ) {
