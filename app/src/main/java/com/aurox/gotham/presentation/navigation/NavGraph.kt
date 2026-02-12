@@ -74,7 +74,12 @@ fun NavGraph(
                                 }
                             }
                         },
-                        icon = { Icon(Icons.Default.Home, null) },
+                        icon = {
+                            Icon(
+                                Icons.Default.Home,
+                                contentDescription = stringResource(R.string.nav_home)
+                            )
+                        },
                         label = { Text(stringResource(R.string.nav_home)) },
                         colors = navItemColors
                     )
@@ -87,7 +92,12 @@ fun NavGraph(
                                 }
                             }
                         },
-                        icon = { Icon(Icons.Default.Receipt, null) },
+                        icon = {
+                            Icon(
+                                Icons.Default.Receipt,
+                                contentDescription = stringResource(R.string.nav_tickets)
+                            )
+                        },
                         label = { Text(stringResource(R.string.nav_tickets)) },
                         colors = navItemColors
                     )
@@ -100,7 +110,12 @@ fun NavGraph(
                                 }
                             }
                         },
-                        icon = { Icon(Icons.Default.Settings, null) },
+                        icon = {
+                            Icon(
+                                Icons.Default.Settings,
+                                contentDescription = stringResource(R.string.nav_settings)
+                            )
+                        },
                         label = { Text(stringResource(R.string.nav_settings)) },
                         colors = navItemColors
                     )
