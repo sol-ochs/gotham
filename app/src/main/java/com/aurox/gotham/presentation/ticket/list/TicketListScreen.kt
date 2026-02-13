@@ -178,6 +178,7 @@ fun TicketListScreen(
                     items(state.tickets, key = { it.summonsNumber }) { ticket ->
                         TicketCard(
                             ticket = ticket,
+                            selectedStatusFilter = state.selectedStatusFilter,
                             onClick = { onTicketClick(ticket.summonsNumber) }
                         )
                     }
@@ -334,6 +335,7 @@ private fun VehicleFilterDropdown(
 @Composable
 private fun TicketCard(
     ticket: Ticket,
+    selectedStatusFilter: TicketStatusFilter,
     onClick: () -> Unit
 ) {
     Card(
@@ -374,11 +376,11 @@ private fun TicketCard(
                     }
                 }
             }
-            Text(
-                text = ticket.plate,
-                style = MaterialTheme.typography.bodyMedium,
-                color = GoldenYellow
-            )
+                Text(
+                    text = ticket.plate,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = GoldenYellow
+                )
             Row(
                 horizontalArrangement = Arrangement.spacedBy(4.dp),
                 verticalAlignment = Alignment.CenterVertically
@@ -398,6 +400,36 @@ private fun TicketCard(
                     style = MaterialTheme.typography.bodySmall,
                     color = GoldenYellow
                 )
+            }
+            if (selectedStatusFilter == TicketStatusFilter.ALL) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                    horizontalArrangement = Arrangement.End
+                ) {
+                    Badge(
+                        containerColor = if (ticket.isPaid) {
+                            MaterialTheme.colorScheme.tertiaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.errorContainer
+                        },
+                        contentColor = if (ticket.isPaid) {
+                            MaterialTheme.colorScheme.onTertiaryContainer
+                        } else {
+                            MaterialTheme.colorScheme.onErrorContainer
+                        }
+                    ) {
+                        val statusText = if (ticket.isPaid) {
+                            stringResource(R.string.ticket_paid)
+                        } else {
+                            stringResource(R.string.ticket_unpaid)
+                        }
+                        Text(
+                            text = statusText.uppercase(Locale.US)
+                        )
+                    }
+                }
             }
         }
     }
