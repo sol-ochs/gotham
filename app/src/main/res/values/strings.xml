@@ -28,26 +28,18 @@
     <string name="vehicle_save_button">Save Vehicle</string>
 
     <!-- Ticket -->
-    <string name="ticket_list_title">Tickets</string>
-    <string name="ticket_detail_title">Ticket Details</string>
     <string name="ticket_empty_state">No parking tickets found</string>
     <string name="ticket_empty_state_description">Great news! You have no parking tickets.</string>
     <string name="ticket_summons_number">Summons #</string>
-    <string name="ticket_violation">Violation</string>
     <string name="ticket_date">Date</string>
     <string name="ticket_time">Time</string>
     <string name="ticket_location">Location</string>
     <string name="ticket_fine_amount">Fine Amount</string>
     <string name="ticket_amount_due">Amount Due</string>
     <string name="ticket_status">Status</string>
-    <string name="ticket_penalty">Penalty</string>
-    <string name="ticket_interest">Interest</string>
     <string name="ticket_paid">Paid</string>
     <string name="ticket_unpaid">Unpaid</string>
     <string name="ticket_new_badge">NEW</string>
-    <string name="ticket_sort_newest">Newest First</string>
-    <string name="ticket_sort_oldest">Oldest First</string>
-    <string name="ticket_sort_amount">By Amount</string>
     <string name="ticket_filter_all">All Vehicles</string>
     <string name="ticket_view_summons">View Summons</string>
 
