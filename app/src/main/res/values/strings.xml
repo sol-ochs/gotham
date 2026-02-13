@@ -43,6 +43,7 @@
     <string name="ticket_penalty">Penalty</string>
     <string name="ticket_interest">Interest</string>
     <string name="ticket_paid">Paid</string>
+    <string name="ticket_unpaid">Unpaid</string>
     <string name="ticket_new_badge">NEW</string>
     <string name="ticket_sort_newest">Newest First</string>
     <string name="ticket_sort_oldest">Oldest First</string>
