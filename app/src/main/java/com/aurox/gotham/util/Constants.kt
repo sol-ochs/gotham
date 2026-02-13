@@ -19,12 +19,22 @@ object Constants {
     // Ticket Age Thresholds
     const val PAYABLE_TICKET_AGE_DAYS = 100L
 
-    // Notification
-    const val NOTIFICATION_CHANNEL_ID = "parking_tickets_channel"
-    const val NOTIFICATION_CHANNEL_NAME = "Parking Tickets"
+    // Notification - New Tickets
+    const val NOTIFICATION_CHANNEL_NEW_TICKETS_ID = "parking_tickets_channel"
+    const val NOTIFICATION_CHANNEL_NEW_TICKETS_NAME = "Parking Tickets"
     const val NOTIFICATION_ID_NEW_TICKETS = 1001
+
+    // Notification - Unpaid Reminders
+    const val NOTIFICATION_CHANNEL_REMINDERS_ID = "unpaid_reminders_channel"
+    const val NOTIFICATION_CHANNEL_REMINDERS_NAME = "Unpaid Ticket Reminders"
+    const val NOTIFICATION_ID_UNPAID_REMINDER = 1002
+
+    // Reminder Scheduling
+    const val DEFAULT_REMINDER_HOUR = 10
+    const val DEFAULT_REMINDER_INTERVAL_DAYS = 7L
 
     // Preferences
     const val PREFS_NAME = "gotham_prefs"
     const val PREF_NOTIFICATIONS_ENABLED = "notifications_enabled"
+    const val PREF_REMINDERS_ENABLED = "reminders_enabled"
 }

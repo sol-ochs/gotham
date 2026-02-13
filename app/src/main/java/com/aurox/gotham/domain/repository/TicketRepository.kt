@@ -18,4 +18,6 @@ interface TicketRepository {
     suspend fun fetchTicketsForVehicle(vehicle: Vehicle): Result<List<Ticket>>
     suspend fun syncTicketsForVehicle(vehicle: Vehicle): Result<List<Ticket>>
     suspend fun checkForNewTickets(vehicles: List<Vehicle>): Result<List<Ticket>>
+    suspend fun getUnpaidReminderTicketCount(): Int
+    suspend fun getUnpaidReminderTicketTotal(): Double
 }

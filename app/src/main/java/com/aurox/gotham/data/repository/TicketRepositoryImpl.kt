@@ -16,6 +16,7 @@ import retrofit2.HttpException
 import java.io.IOException
 import java.net.SocketTimeoutException
 import java.time.LocalDateTime
+import com.aurox.gotham.util.Constants.PAYABLE_TICKET_AGE_DAYS
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -162,5 +163,15 @@ class TicketRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             Result.Error(NetworkError.Unknown(), e.message)
         }
+    }
+
+    override suspend fun getUnpaidReminderTicketCount(): Int {
+        val threshold = LocalDateTime.now().minusDays(PAYABLE_TICKET_AGE_DAYS).toString()
+        return ticketDao.getUnpaidReminderTicketCount(threshold)
+    }
+
+    override suspend fun getUnpaidReminderTicketTotal(): Double {
+        val threshold = LocalDateTime.now().minusDays(PAYABLE_TICKET_AGE_DAYS).toString()
+        return ticketDao.getUnpaidReminderTicketTotal(threshold) ?: 0.0
     }
 }

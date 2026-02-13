@@ -51,6 +51,9 @@
     <string name="settings_check_frequency_6h">Every 6 hours</string>
     <string name="settings_check_frequency_12h">Every 12 hours</string>
     <string name="settings_check_frequency_24h">Every 24 hours</string>
+    <string name="settings_reminders">Unpaid Ticket Reminders</string>
+    <string name="settings_enable_reminders">Enable Reminders</string>
+    <string name="settings_reminders_description">Get periodic reminders about unpaid tickets</string>
     <string name="settings_about">About</string>
     <string name="settings_version">Version %s</string>
     <string name="settings_last_check">Last check: %s</string>

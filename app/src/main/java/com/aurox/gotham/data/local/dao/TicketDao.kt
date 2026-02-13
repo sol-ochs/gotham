@@ -73,4 +73,18 @@ interface TicketDao {
 
     @Query("SELECT summons_number FROM tickets WHERE vehicle_id = :vehicleId")
     suspend fun getSummonsNumbersByVehicle(vehicleId: Long): List<String>
+
+    @Query("""
+        SELECT COUNT(*) FROM tickets
+        WHERE amount_due > 0
+        AND issue_date_time > :thresholdDate
+    """)
+    suspend fun getUnpaidReminderTicketCount(thresholdDate: String): Int
+
+    @Query("""
+        SELECT SUM(amount_due) FROM tickets
+        WHERE amount_due > 0
+        AND issue_date_time > :thresholdDate
+    """)
+    suspend fun getUnpaidReminderTicketTotal(thresholdDate: String): Double?
 }

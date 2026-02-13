@@ -1,12 +1,13 @@
 # Gotham
 
-Gotham is a native Android app (Kotlin) that tracks NYC parking tickets via the NYC Open Data API. Users can register up to 5 vehicles and receive daily notifications when new tickets appear.
+Gotham is a native Android app (Kotlin) that tracks NYC parking tickets via the NYC Open Data API. Users can register up to 5 vehicles, receive daily notifications when new tickets appear, and get periodic reminders about unpaid tickets.
 
 ## Features
 
 - Track up to 5 vehicles
 - Daily background checks at 8am
 - Push notifications for new tickets
+- Periodic reminders for unpaid tickets
 - Offline support with local caching
 
 ## Build Commands
@@ -30,6 +31,11 @@ Create test tickets (debug builds only):
 adb shell am broadcast -n com.aurox.gotham/.debug.DebugTicketReceiver \
   -a com.aurox.gotham.debug.TEST_TICKET \
   --es plate "ABC1234" --ei ticket_count 2 --ef fine_amount 115.0 --es violation "'FIRE HYDRANT'"
+```
+
+Trigger unpaid reminder notification (debug builds only):
+```bash
+adb shell "am broadcast -n com.aurox.gotham/.debug.DebugTicketReceiver -a com.aurox.gotham.debug.TRIGGER_UNPAID_REMINDER"
 ```
 
 ## Architecture

@@ -37,7 +37,7 @@ class NotificationHelper @Inject constructor(
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val notification = NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
+        val notification = NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_NEW_TICKETS_ID)
             .setSmallIcon(R.drawable.ic_stat_name)
             .setContentTitle(title)
             .setContentText(content)
@@ -48,5 +48,37 @@ class NotificationHelper @Inject constructor(
             .build()
 
         notificationManager.notify(Constants.NOTIFICATION_ID_NEW_TICKETS, notification)
+    }
+
+    fun showUnpaidReminderNotification(count: Int, totalAmount: Double) {
+        if (count <= 0) return
+
+        val formattedTotal = String.format("%.2f", totalAmount)
+        val title = "Unpaid Ticket Reminder"
+        val content = "You have $count unpaid ticket${if (count > 1) "s" else ""} totaling $formattedTotal"
+
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("navigate_to", "ticket_list?statusFilter=UNPAID")
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            1,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notification = NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_REMINDERS_ID)
+            .setSmallIcon(R.drawable.ic_stat_name)
+            .setContentTitle(title)
+            .setContentText(content)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(content))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .build()
+
+        notificationManager.notify(Constants.NOTIFICATION_ID_UNPAID_REMINDER, notification)
     }
 }
