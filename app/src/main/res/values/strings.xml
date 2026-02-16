@@ -36,12 +36,16 @@
     <string name="ticket_location">Location</string>
     <string name="ticket_fine_amount">Fine Amount</string>
     <string name="ticket_amount_due">Amount Due</string>
-    <string name="ticket_status">Status</string>
+    <string name="ticket_adjudication_status">Adjudication Status</string>
     <string name="ticket_paid">Paid</string>
+    <string name="ticket_paid_user_marked">Paid (Marked)</string>
     <string name="ticket_unpaid">Unpaid</string>
     <string name="ticket_new_badge">NEW</string>
     <string name="ticket_filter_all">All Vehicles</string>
     <string name="ticket_view_summons">View Summons</string>
+    <string name="ticket_mark_paid_local">Mark as Paid</string>
+    <string name="ticket_undo_mark_paid_local">Unmark as Paid</string>
+    <string name="ticket_user_marked_note">You chose to mark this ticket as paid. Reminders are suppressed while the override is in place. This will be updated when the city\'s systems reflect the new status.</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
@@ -51,6 +55,9 @@
     <string name="settings_check_frequency_6h">Every 6 hours</string>
     <string name="settings_check_frequency_12h">Every 12 hours</string>
     <string name="settings_check_frequency_24h">Every 24 hours</string>
+    <string name="settings_reminders">Unpaid Ticket Reminders</string>
+    <string name="settings_enable_reminders">Enable Reminders</string>
+    <string name="settings_reminders_description">Get reminders about unpaid tickets and upcoming deadlines</string>
     <string name="settings_about">About</string>
     <string name="settings_version">Version %s</string>
     <string name="settings_last_check">Last check: %s</string>

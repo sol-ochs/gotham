@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.aurox.gotham.domain.repository.TicketRepository
 import com.aurox.gotham.domain.usecase.ticket.MarkTicketAsSeenUseCase
+import com.aurox.gotham.domain.usecase.ticket.SetTicketPaidOverrideUseCase
 import com.aurox.gotham.presentation.navigation.Screen
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +19,7 @@ import javax.inject.Inject
 class TicketDetailViewModel @Inject constructor(
     private val ticketRepository: TicketRepository,
     private val markTicketAsSeenUseCase: MarkTicketAsSeenUseCase,
+    private val setTicketPaidOverrideUseCase: SetTicketPaidOverrideUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -48,6 +50,16 @@ class TicketDetailViewModel @Inject constructor(
     private fun markAsSeen(summonsNumber: String) {
         viewModelScope.launch {
             markTicketAsSeenUseCase(summonsNumber)
+        }
+    }
+
+    fun togglePaidOverride() {
+        val ticket = _state.value.ticket ?: return
+        viewModelScope.launch {
+            setTicketPaidOverrideUseCase(
+                summonsNumber = ticket.summonsNumber,
+                isEnabled = !ticket.isPaidOverride
+            )
         }
     }
 }

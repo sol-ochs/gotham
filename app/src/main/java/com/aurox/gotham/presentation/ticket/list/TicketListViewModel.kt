@@ -199,7 +199,7 @@ class TicketListViewModel @Inject constructor(
             .filter { ticket ->
                 if (showOlderUnresolved) true else ticket.issueDateTime.isAfter(threshold)
             }
-            .sumOf { it.amountDue }
+            .sumOf { it.effectiveAmountDue }
     }
 
     fun refresh(markAsSeen: Boolean = true) {

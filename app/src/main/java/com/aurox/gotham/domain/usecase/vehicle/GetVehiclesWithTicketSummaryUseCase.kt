@@ -35,7 +35,7 @@ class GetVehiclesWithTicketSummaryUseCase @Inject constructor(
                         VehicleWithTicketSummary(
                             vehicle = vehicle,
                             openTicketCount = payableUnpaidTickets.size,
-                            amountDue = payableUnpaidTickets.sumOf { it.amountDue }
+                            amountDue = payableUnpaidTickets.sumOf { it.effectiveAmountDue }
                         )
                     }
                 }

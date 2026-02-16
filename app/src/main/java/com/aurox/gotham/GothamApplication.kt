@@ -27,9 +27,11 @@ class GothamApplication : Application(), Configuration.Provider {
             .build()
 
     private fun createNotificationChannel() {
-        val channel = NotificationChannel(
-            Constants.NOTIFICATION_CHANNEL_ID,
-            Constants.NOTIFICATION_CHANNEL_NAME,
+        val notificationManager = getSystemService(NotificationManager::class.java)
+
+        val ticketsChannel = NotificationChannel(
+            Constants.NOTIFICATION_CHANNEL_NEW_TICKETS_ID,
+            Constants.NOTIFICATION_CHANNEL_NEW_TICKETS_NAME,
             NotificationManager.IMPORTANCE_HIGH
         ).apply {
             description = "Notifications for new parking tickets"
@@ -37,7 +39,15 @@ class GothamApplication : Application(), Configuration.Provider {
             enableLights(true)
         }
 
-        val notificationManager = getSystemService(NotificationManager::class.java)
-        notificationManager.createNotificationChannel(channel)
+        val remindersChannel = NotificationChannel(
+            Constants.NOTIFICATION_CHANNEL_REMINDERS_ID,
+            Constants.NOTIFICATION_CHANNEL_REMINDERS_NAME,
+            NotificationManager.IMPORTANCE_DEFAULT
+        ).apply {
+            description = "Periodic reminders for unpaid tickets"
+        }
+
+        notificationManager.createNotificationChannel(ticketsChannel)
+        notificationManager.createNotificationChannel(remindersChannel)
     }
 }

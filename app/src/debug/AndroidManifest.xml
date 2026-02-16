@@ -7,6 +7,8 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="com.aurox.gotham.debug.TEST_TICKET" />
+                <action android:name="com.aurox.gotham.debug.TRIGGER_UNPAID_REMINDER" />
+                <action android:name="com.aurox.gotham.debug.TRIGGER_DEADLINE_REMINDER" />
             </intent-filter>
         </receiver>
     </application>

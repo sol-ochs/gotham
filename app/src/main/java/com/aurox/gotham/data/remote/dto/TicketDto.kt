@@ -36,7 +36,7 @@ data class TicketDto(
     val amountDue: String?,
 
     @Json(name = "violation_status")
-    val violationStatus: String?,
+    val adjudicationStatus: String?,
 
     @Json(name = "penalty_amount")
     val penaltyAmount: String?,

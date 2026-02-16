@@ -148,15 +148,45 @@ fun TicketDetailScreen(
                         )
                         DetailRow(
                             label = stringResource(R.string.ticket_amount_due),
-                            value = ticket.formattedAmountDue,
+                            value = ticket.formattedEffectiveAmountDue,
                             valueColor = GoldenYellow
                         )
-                        ticket.violationStatus?.let {
+                        ticket.adjudicationStatus?.let {
                             DetailRow(
-                                label = stringResource(R.string.ticket_status),
+                                label = stringResource(R.string.ticket_adjudication_status),
                                 value = it
                             )
                         }
+                        if (ticket.isPaidOverride) {
+                            Text(
+                                text = stringResource(R.string.ticket_user_marked_note),
+                                style = MaterialTheme.typography.bodySmall,
+                                color = GoldenYellow
+                            )
+                        }
+                    }
+                }
+
+                if (ticket.amountDue > 0.0 || ticket.isPaidOverride) {
+                    Button(
+                        onClick = viewModel::togglePaidOverride,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(56.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = GoldenYellow,
+                            contentColor = Color.Black
+                        ),
+                        shape = RoundedCornerShape(12.dp)
+                    ) {
+                        Text(
+                            text = if (ticket.isPaidOverride) {
+                                stringResource(R.string.ticket_undo_mark_paid_local)
+                            } else {
+                                stringResource(R.string.ticket_mark_paid_local)
+                            },
+                            style = MaterialTheme.typography.titleMedium
+                        )
                     }
                 }
 

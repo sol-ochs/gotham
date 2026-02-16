@@ -53,8 +53,8 @@ data class TicketEntity(
     @ColumnInfo(name = "amount_due")
     val amountDue: Double,
 
-    @ColumnInfo(name = "violation_status")
-    val violationStatus: String?,
+    @ColumnInfo(name = "adjudication_status")
+    val adjudicationStatus: String?,
 
     @ColumnInfo(name = "penalty_amount")
     val penaltyAmount: Double?,
@@ -67,6 +67,12 @@ data class TicketEntity(
 
     @ColumnInfo(name = "is_new")
     val isNew: Boolean = true,
+
+    @ColumnInfo(name = "is_paid_override")
+    val isPaidOverride: Boolean = false,
+
+    @ColumnInfo(name = "paid_override_at")
+    val paidOverrideAt: Long? = null,
 
     @ColumnInfo(name = "first_seen_at")
     val firstSeenAt: Long = System.currentTimeMillis(),

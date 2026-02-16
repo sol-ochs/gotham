@@ -1,6 +1,8 @@
 package com.aurox.gotham.data.repository
 
 import com.aurox.gotham.data.local.dao.TicketDao
+import com.aurox.gotham.data.local.dao.DeadlineReminderEventDao
+import com.aurox.gotham.data.local.entity.DeadlineReminderEventEntity
 import com.aurox.gotham.data.remote.NycOpenDataApi
 import com.aurox.gotham.data.repository.mapper.toDomain
 import com.aurox.gotham.data.repository.mapper.toDomainList
@@ -15,13 +17,16 @@ import kotlinx.coroutines.flow.map
 import retrofit2.HttpException
 import java.io.IOException
 import java.net.SocketTimeoutException
+import java.time.LocalDate
 import java.time.LocalDateTime
+import com.aurox.gotham.util.Constants.PAYABLE_TICKET_AGE_DAYS
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class TicketRepositoryImpl @Inject constructor(
     private val ticketDao: TicketDao,
+    private val deadlineReminderEventDao: DeadlineReminderEventDao,
     private val api: NycOpenDataApi
 ) : TicketRepository {
 
@@ -114,8 +119,11 @@ class TicketRepositoryImpl @Inject constructor(
                 } else {
                     val existingTicket = ticketDao.getTicketBySummonsNumber(ticketEntity.summonsNumber)
                     if (existingTicket != null) {
+                        val sourcePaid = ticketEntity.amountDue <= 0.0
                         val updatedTicket = ticketEntity.copy(
                             isNew = existingTicket.isNew,
+                            isPaidOverride = if (sourcePaid) false else existingTicket.isPaidOverride,
+                            paidOverrideAt = if (sourcePaid) null else existingTicket.paidOverrideAt,
                             firstSeenAt = existingTicket.firstSeenAt
                         )
                         ticketDao.updateTicket(updatedTicket)
@@ -162,5 +170,43 @@ class TicketRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             Result.Error(NetworkError.Unknown(), e.message)
         }
+    }
+
+    override suspend fun getUnpaidReminderTicketCount(): Int {
+        val threshold = LocalDateTime.now().minusDays(PAYABLE_TICKET_AGE_DAYS).toString()
+        return ticketDao.getUnpaidReminderTicketCount(threshold)
+    }
+
+    override suspend fun getUnpaidReminderTicketTotal(): Double {
+        val threshold = LocalDateTime.now().minusDays(PAYABLE_TICKET_AGE_DAYS).toString()
+        return ticketDao.getUnpaidReminderTicketTotal(threshold) ?: 0.0
+    }
+
+    override suspend fun setTicketPaidOverride(summonsNumber: String, isEnabled: Boolean) {
+        ticketDao.updatePaidOverride(
+            summonsNumber = summonsNumber,
+            isPaidOverride = isEnabled,
+            paidOverrideAt = if (isEnabled) System.currentTimeMillis() else null
+        )
+    }
+
+    override suspend fun getDeadlineReminderCandidates(today: LocalDate): List<Ticket> {
+        val threshold = today.minusDays(30).atStartOfDay().toString()
+        val upperBound = today.atTime(23, 59).toString()
+        return ticketDao.getDeadlineReminderCandidates(threshold, upperBound).toDomainList()
+    }
+
+    override suspend fun hasDeadlineReminderEvent(summonsNumber: String, milestoneDay: Int): Boolean {
+        return deadlineReminderEventDao.hasEvent(summonsNumber, milestoneDay)
+    }
+
+    override suspend fun recordDeadlineReminderEvent(summonsNumber: String, milestoneDay: Int, sentAt: Long) {
+        deadlineReminderEventDao.insertEvent(
+            DeadlineReminderEventEntity(
+                summonsNumber = summonsNumber,
+                milestoneDay = milestoneDay,
+                sentAt = sentAt
+            )
+        )
     }
 }

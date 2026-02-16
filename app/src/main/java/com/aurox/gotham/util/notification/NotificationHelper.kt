@@ -37,7 +37,7 @@ class NotificationHelper @Inject constructor(
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val notification = NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_ID)
+        val notification = NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_NEW_TICKETS_ID)
             .setSmallIcon(R.drawable.ic_stat_name)
             .setContentTitle(title)
             .setContentText(content)
@@ -48,5 +48,68 @@ class NotificationHelper @Inject constructor(
             .build()
 
         notificationManager.notify(Constants.NOTIFICATION_ID_NEW_TICKETS, notification)
+    }
+
+    fun showUnpaidReminderNotification(count: Int) {
+        if (count <= 0) return
+
+        val title = "Unpaid Ticket Reminder"
+        val content = "You have $count unpaid ticket${if (count > 1) "s" else ""}"
+
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("navigate_to", "ticket_list?statusFilter=UNPAID")
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            1,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notification = NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_REMINDERS_ID)
+            .setSmallIcon(R.drawable.ic_stat_name)
+            .setContentTitle(title)
+            .setContentText(content)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(content))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .build()
+
+        notificationManager.notify(Constants.NOTIFICATION_ID_UNPAID_REMINDER, notification)
+    }
+
+    fun showDeadlineReminderNotification(count: Int, nearestDaysLeft: Int) {
+        if (count <= 0) return
+
+        val dayLabel = if (nearestDaysLeft == 1) "day" else "days"
+        val title = "Payment Deadline Reminder"
+        val content = "$count ticket${if (count > 1) "s are" else " is"} due within $nearestDaysLeft $dayLabel"
+
+        val intent = Intent(context, MainActivity::class.java).apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            putExtra("navigate_to", "ticket_list?statusFilter=UNPAID")
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            context,
+            2,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        val notification = NotificationCompat.Builder(context, Constants.NOTIFICATION_CHANNEL_REMINDERS_ID)
+            .setSmallIcon(R.drawable.ic_stat_name)
+            .setContentTitle(title)
+            .setContentText(content)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(content))
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
+            .setContentIntent(pendingIntent)
+            .build()
+
+        notificationManager.notify(Constants.NOTIFICATION_ID_DEADLINE_REMINDER, notification)
     }
 }

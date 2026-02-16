@@ -3,6 +3,7 @@ package com.aurox.gotham.di
 import android.content.Context
 import androidx.room.Room
 import com.aurox.gotham.data.local.AppDatabase
+import com.aurox.gotham.data.local.dao.DeadlineReminderEventDao
 import com.aurox.gotham.data.local.dao.TicketDao
 import com.aurox.gotham.data.local.dao.VehicleDao
 import com.aurox.gotham.util.Constants
@@ -41,5 +42,11 @@ object DatabaseModule {
     @Singleton
     fun provideTicketDao(database: AppDatabase): TicketDao {
         return database.ticketDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideDeadlineReminderEventDao(database: AppDatabase): DeadlineReminderEventDao {
+        return database.deadlineReminderEventDao()
     }
 }

@@ -112,6 +112,8 @@ class AddEditVehicleViewModel @Inject constructor(
                 is Result.Success -> {
                     if (_isFirstVehicle.value) {
                         workManagerScheduler.schedulePeriodicTicketCheck()
+                        workManagerScheduler.scheduleUnpaidReminder()
+                        workManagerScheduler.scheduleDeadlineReminder()
                     }
 
                     // Immediately fetch tickets for the new vehicle

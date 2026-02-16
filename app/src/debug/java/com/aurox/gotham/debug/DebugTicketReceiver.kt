@@ -8,6 +8,8 @@ import com.aurox.gotham.data.local.dao.TicketDao
 import com.aurox.gotham.data.local.dao.VehicleDao
 import com.aurox.gotham.data.local.entity.TicketEntity
 import com.aurox.gotham.domain.model.Ticket
+import com.aurox.gotham.domain.usecase.ticket.GetDeadlineReminderDataUseCase
+import com.aurox.gotham.domain.usecase.ticket.GetUnpaidReminderDataUseCase
 import com.aurox.gotham.util.notification.NotificationHelper
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -29,12 +31,82 @@ class DebugTicketReceiver : BroadcastReceiver() {
         fun notificationHelper(): NotificationHelper
         fun vehicleDao(): VehicleDao
         fun ticketDao(): TicketDao
+        fun getUnpaidReminderDataUseCase(): GetUnpaidReminderDataUseCase
+        fun getDeadlineReminderDataUseCase(): GetDeadlineReminderDataUseCase
     }
 
     override fun onReceive(context: Context, intent: Intent) {
         Log.d(TAG, "Received broadcast: ${intent.action}")
-        if (intent.action != ACTION_TEST_TICKET) return
 
+        when (intent.action) {
+            ACTION_TEST_TICKET -> handleTestTicket(context, intent)
+            ACTION_TRIGGER_UNPAID_REMINDER -> handleTriggerUnpaidReminder(context)
+            ACTION_TRIGGER_DEADLINE_REMINDER -> handleTriggerDeadlineReminder(context)
+            else -> return
+        }
+    }
+
+    private fun handleTriggerDeadlineReminder(context: Context) {
+        val entryPoint = EntryPointAccessors.fromApplication(
+            context.applicationContext,
+            DebugTicketEntryPoint::class.java
+        )
+
+        val pendingResult = goAsync()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val useCase = entryPoint.getDeadlineReminderDataUseCase()
+                val data = useCase()
+                Log.d(
+                    TAG,
+                    "Deadline reminder data: count=${data.count}, nearestDaysLeft=${data.nearestDaysLeft}"
+                )
+
+                if (data.count > 0) {
+                    entryPoint.notificationHelper().showDeadlineReminderNotification(
+                        data.count,
+                        data.nearestDaysLeft
+                    )
+                    Log.d(TAG, "Deadline reminder notification sent")
+                } else {
+                    Log.d(TAG, "No deadline reminder tickets, skipping notification")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to trigger deadline reminder", e)
+            } finally {
+                pendingResult.finish()
+            }
+        }
+    }
+
+    private fun handleTriggerUnpaidReminder(context: Context) {
+        val entryPoint = EntryPointAccessors.fromApplication(
+            context.applicationContext,
+            DebugTicketEntryPoint::class.java
+        )
+
+        val pendingResult = goAsync()
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                val useCase = entryPoint.getUnpaidReminderDataUseCase()
+                val data = useCase()
+                Log.d(TAG, "Unpaid reminder data: count=${data.count}, total=${data.totalAmount}")
+
+                if (data.count > 0) {
+                    entryPoint.notificationHelper().showUnpaidReminderNotification(data.count)
+                    Log.d(TAG, "Unpaid reminder notification sent")
+                } else {
+                    Log.d(TAG, "No unpaid reminder tickets, skipping notification")
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to trigger unpaid reminder", e)
+            } finally {
+                pendingResult.finish()
+            }
+        }
+    }
+
+    private fun handleTestTicket(context: Context, intent: Intent) {
         val plate = intent.getStringExtra(EXTRA_PLATE)
         if (plate.isNullOrBlank()) {
             Log.e(TAG, "Missing required 'plate' parameter")
@@ -108,7 +180,7 @@ class DebugTicketReceiver : BroadcastReceiver() {
             violationLocation = "123 TEST STREET",
             fineAmount = fineAmount,
             amountDue = fineAmount,
-            violationStatus = "OUTSTANDING",
+            adjudicationStatus = null,
             penaltyAmount = null,
             interestAmount = null,
             paymentAmount = null,
@@ -128,7 +200,7 @@ class DebugTicketReceiver : BroadcastReceiver() {
             violationLocation = violationLocation,
             fineAmount = fineAmount,
             amountDue = amountDue,
-            violationStatus = violationStatus,
+            adjudicationStatus = adjudicationStatus,
             penaltyAmount = penaltyAmount,
             interestAmount = interestAmount,
             paymentAmount = paymentAmount,
@@ -139,6 +211,8 @@ class DebugTicketReceiver : BroadcastReceiver() {
     companion object {
         private const val TAG = "DebugTicket"
         private const val ACTION_TEST_TICKET = "com.aurox.gotham.debug.TEST_TICKET"
+        private const val ACTION_TRIGGER_UNPAID_REMINDER = "com.aurox.gotham.debug.TRIGGER_UNPAID_REMINDER"
+        private const val ACTION_TRIGGER_DEADLINE_REMINDER = "com.aurox.gotham.debug.TRIGGER_DEADLINE_REMINDER"
         private const val EXTRA_PLATE = "plate"
         private const val EXTRA_TICKET_COUNT = "ticket_count"
         private const val EXTRA_FINE_AMOUNT = "fine_amount"

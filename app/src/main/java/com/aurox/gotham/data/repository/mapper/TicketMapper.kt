@@ -21,11 +21,13 @@ fun TicketEntity.toDomain(): Ticket {
         violationLocation = violationLocation,
         fineAmount = fineAmount,
         amountDue = amountDue,
-        violationStatus = violationStatus,
+        adjudicationStatus = normalizeAdjudicationStatus(adjudicationStatus),
         penaltyAmount = penaltyAmount,
         interestAmount = interestAmount,
         paymentAmount = paymentAmount,
         isNew = isNew,
+        isPaidOverride = isPaidOverride,
+        paidOverrideAt = paidOverrideAt,
         firstSeenAt = firstSeenAt,
         lastUpdatedAt = lastUpdatedAt
     )
@@ -43,11 +45,13 @@ fun Ticket.toEntity(): TicketEntity {
         violationLocation = violationLocation,
         fineAmount = fineAmount,
         amountDue = amountDue,
-        violationStatus = violationStatus,
+        adjudicationStatus = adjudicationStatus,
         penaltyAmount = penaltyAmount,
         interestAmount = interestAmount,
         paymentAmount = paymentAmount,
         isNew = isNew,
+        isPaidOverride = isPaidOverride,
+        paidOverrideAt = paidOverrideAt,
         firstSeenAt = firstSeenAt,
         lastUpdatedAt = lastUpdatedAt
     )
@@ -100,11 +104,13 @@ fun TicketDto.toEntity(vehicleId: Long): TicketEntity {
         violationLocation = violationLocation,
         fineAmount = fineAmount?.toDoubleOrNull() ?: 0.0,
         amountDue = amountDue?.toDoubleOrNull() ?: 0.0,
-        violationStatus = violationStatus,
+        adjudicationStatus = normalizeAdjudicationStatus(adjudicationStatus),
         penaltyAmount = penaltyAmount?.toDoubleOrNull(),
         interestAmount = interestAmount?.toDoubleOrNull(),
         paymentAmount = paymentAmount?.toDoubleOrNull(),
         isNew = true,
+        isPaidOverride = false,
+        paidOverrideAt = null,
         firstSeenAt = System.currentTimeMillis(),
         lastUpdatedAt = System.currentTimeMillis()
     )
@@ -116,4 +122,11 @@ fun List<TicketEntity>.toDomainList(): List<Ticket> {
 
 fun List<TicketDto>.toEntityList(vehicleId: Long): List<TicketEntity> {
     return map { it.toEntity(vehicleId) }
+}
+
+private fun normalizeAdjudicationStatus(status: String?): String? {
+    return status
+        ?.trim()
+        ?.takeIf { it.isNotEmpty() }
+        ?.uppercase(Locale.US)
 }
