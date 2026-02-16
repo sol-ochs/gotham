@@ -20,12 +20,17 @@ data class Ticket(
     val interestAmount: Double?,
     val paymentAmount: Double?,
     val isNew: Boolean = true,
+    val isPaidOverride: Boolean = false,
+    val paidOverrideAt: Long? = null,
     val firstSeenAt: Long = System.currentTimeMillis(),
     val lastUpdatedAt: Long = System.currentTimeMillis()
 ) {
-    val isPaid: Boolean
+    val isPaidFromSource: Boolean
         get() = violationStatus?.contains("paid", ignoreCase = true) == true ||
                 amountDue <= 0.0
+
+    val isPaid: Boolean
+        get() = isPaidOverride || isPaidFromSource
 
     val formattedIssueDate: String
         get() = issueDateTime.format(DATE_FORMATTER)

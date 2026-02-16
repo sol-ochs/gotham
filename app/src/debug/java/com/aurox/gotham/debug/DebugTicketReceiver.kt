@@ -57,7 +57,7 @@ class DebugTicketReceiver : BroadcastReceiver() {
                 Log.d(TAG, "Unpaid reminder data: count=${data.count}, total=${data.totalAmount}")
 
                 if (data.count > 0) {
-                    entryPoint.notificationHelper().showUnpaidReminderNotification(data.count, data.totalAmount)
+                    entryPoint.notificationHelper().showUnpaidReminderNotification(data.count)
                     Log.d(TAG, "Unpaid reminder notification sent")
                 } else {
                     Log.d(TAG, "No unpaid reminder tickets, skipping notification")

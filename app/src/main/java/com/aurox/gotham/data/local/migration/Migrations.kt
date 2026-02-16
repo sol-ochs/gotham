@@ -106,5 +106,34 @@ object Migrations {
         }
     }
 
-    val ALL: Array<Migration> = arrayOf(MIGRATION_3_4, MIGRATION_4_5)
+    val MIGRATION_5_6 = object : Migration(5, 6) {
+        override fun migrate(db: SupportSQLiteDatabase) {
+            db.execSQL(
+                """
+                ALTER TABLE tickets
+                ADD COLUMN is_paid_override INTEGER NOT NULL DEFAULT 0
+                """.trimIndent()
+            )
+
+            db.execSQL(
+                """
+                ALTER TABLE tickets
+                ADD COLUMN paid_override_at INTEGER
+                """.trimIndent()
+            )
+
+            db.execSQL(
+                """
+                CREATE TABLE IF NOT EXISTS deadline_reminder_events (
+                    summons_number TEXT NOT NULL,
+                    milestone_day INTEGER NOT NULL,
+                    sent_at INTEGER NOT NULL,
+                    PRIMARY KEY(summons_number, milestone_day)
+                )
+                """.trimIndent()
+            )
+        }
+    }
+
+    val ALL: Array<Migration> = arrayOf(MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6)
 }

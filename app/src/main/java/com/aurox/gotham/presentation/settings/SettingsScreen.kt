@@ -157,10 +157,12 @@ fun SettingsScreen(
                                         workManagerScheduler.schedulePeriodicTicketCheck()
                                         if (remindersEnabled) {
                                             workManagerScheduler.scheduleUnpaidReminder()
+                                            workManagerScheduler.scheduleDeadlineReminder()
                                         }
                                     } else {
                                         workManagerScheduler.cancelPeriodicTicketCheck()
                                         workManagerScheduler.cancelUnpaidReminder()
+                                        workManagerScheduler.cancelDeadlineReminder()
                                     }
                                 }
                             },
@@ -210,8 +212,10 @@ fun SettingsScreen(
                                     }
                                     if (enabled) {
                                         workManagerScheduler.scheduleUnpaidReminder()
+                                        workManagerScheduler.scheduleDeadlineReminder()
                                     } else {
                                         workManagerScheduler.cancelUnpaidReminder()
+                                        workManagerScheduler.cancelDeadlineReminder()
                                     }
                                 }
                             },

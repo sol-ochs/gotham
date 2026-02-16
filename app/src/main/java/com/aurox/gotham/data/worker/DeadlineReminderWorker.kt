@@ -7,7 +7,8 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.aurox.gotham.domain.usecase.ticket.GetUnpaidReminderDataUseCase
+import com.aurox.gotham.domain.usecase.ticket.GetDeadlineReminderDataUseCase
+import com.aurox.gotham.domain.repository.TicketRepository
 import com.aurox.gotham.util.Constants
 import com.aurox.gotham.util.notification.NotificationHelper
 import dagger.assisted.Assisted
@@ -15,10 +16,11 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.flow.first
 
 @HiltWorker
-class UnpaidReminderWorker @AssistedInject constructor(
+class DeadlineReminderWorker @AssistedInject constructor(
     @Assisted appContext: Context,
     @Assisted workerParams: WorkerParameters,
-    private val getUnpaidReminderDataUseCase: GetUnpaidReminderDataUseCase,
+    private val getDeadlineReminderDataUseCase: GetDeadlineReminderDataUseCase,
+    private val ticketRepository: TicketRepository,
     private val notificationHelper: NotificationHelper,
     private val dataStore: DataStore<Preferences>
 ) : CoroutineWorker(appContext, workerParams) {
@@ -36,10 +38,23 @@ class UnpaidReminderWorker @AssistedInject constructor(
                 return Result.success()
             }
 
-            val reminderData = getUnpaidReminderDataUseCase()
+            val reminderData = getDeadlineReminderDataUseCase()
+            if (reminderData.count <= 0) {
+                return Result.success()
+            }
 
-            if (reminderData.count > 0) {
-                notificationHelper.showUnpaidReminderNotification(reminderData.count)
+            notificationHelper.showDeadlineReminderNotification(
+                reminderData.count,
+                reminderData.nearestDaysLeft
+            )
+
+            val now = System.currentTimeMillis()
+            reminderData.targets.forEach { target ->
+                ticketRepository.recordDeadlineReminderEvent(
+                    summonsNumber = target.summonsNumber,
+                    milestoneDay = target.milestoneDay,
+                    sentAt = now
+                )
             }
 
             Result.success()
@@ -53,6 +68,6 @@ class UnpaidReminderWorker @AssistedInject constructor(
     }
 
     companion object {
-        const val WORK_NAME = "unpaid_reminder_work"
+        const val WORK_NAME = "deadline_reminder_work"
     }
 }

@@ -26,6 +26,8 @@ fun TicketEntity.toDomain(): Ticket {
         interestAmount = interestAmount,
         paymentAmount = paymentAmount,
         isNew = isNew,
+        isPaidOverride = isPaidOverride,
+        paidOverrideAt = paidOverrideAt,
         firstSeenAt = firstSeenAt,
         lastUpdatedAt = lastUpdatedAt
     )
@@ -48,6 +50,8 @@ fun Ticket.toEntity(): TicketEntity {
         interestAmount = interestAmount,
         paymentAmount = paymentAmount,
         isNew = isNew,
+        isPaidOverride = isPaidOverride,
+        paidOverrideAt = paidOverrideAt,
         firstSeenAt = firstSeenAt,
         lastUpdatedAt = lastUpdatedAt
     )
@@ -105,6 +109,8 @@ fun TicketDto.toEntity(vehicleId: Long): TicketEntity {
         interestAmount = interestAmount?.toDoubleOrNull(),
         paymentAmount = paymentAmount?.toDoubleOrNull(),
         isNew = true,
+        isPaidOverride = false,
+        paidOverrideAt = null,
         firstSeenAt = System.currentTimeMillis(),
         lastUpdatedAt = System.currentTimeMillis()
     )

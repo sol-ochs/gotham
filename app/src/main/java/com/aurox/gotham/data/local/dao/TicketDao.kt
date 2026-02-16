@@ -47,6 +47,18 @@ interface TicketDao {
     @Query("UPDATE tickets SET is_new = 0")
     suspend fun markAllTicketsAsSeen()
 
+    @Query("""
+        UPDATE tickets
+        SET is_paid_override = :isPaidOverride,
+            paid_override_at = :paidOverrideAt
+        WHERE summons_number = :summonsNumber
+    """)
+    suspend fun updatePaidOverride(
+        summonsNumber: String,
+        isPaidOverride: Boolean,
+        paidOverrideAt: Long?
+    )
+
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertTicket(ticket: TicketEntity): Long
 
@@ -78,6 +90,7 @@ interface TicketDao {
         SELECT COUNT(*) FROM tickets
         WHERE amount_due > 0
         AND issue_date_time > :thresholdDate
+        AND is_paid_override = 0
     """)
     suspend fun getUnpaidReminderTicketCount(thresholdDate: String): Int
 
@@ -85,6 +98,20 @@ interface TicketDao {
         SELECT SUM(amount_due) FROM tickets
         WHERE amount_due > 0
         AND issue_date_time > :thresholdDate
+        AND is_paid_override = 0
     """)
     suspend fun getUnpaidReminderTicketTotal(thresholdDate: String): Double?
+
+    @Query("""
+        SELECT * FROM tickets
+        WHERE amount_due > 0
+        AND issue_date_time > :thresholdDate
+        AND issue_date_time <= :upperBoundDate
+        AND is_paid_override = 0
+        ORDER BY issue_date_time DESC
+    """)
+    suspend fun getDeadlineReminderCandidates(
+        thresholdDate: String,
+        upperBoundDate: String
+    ): List<TicketEntity>
 }

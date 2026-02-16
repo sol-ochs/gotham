@@ -8,6 +8,8 @@ Gotham is a native Android app (Kotlin) that tracks NYC parking tickets via the 
 - Daily background checks at 8am
 - Push notifications for new tickets
 - Periodic reminders for unpaid tickets
+- Deadline reminders at 7, 3, and 1 day before the 30-day window
+- Local "Mark as Paid" override to suppress reminders until NYC data catches up
 - Offline support with local caching
 
 ## Build Commands

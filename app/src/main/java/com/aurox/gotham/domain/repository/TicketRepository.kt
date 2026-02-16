@@ -4,6 +4,7 @@ import com.aurox.gotham.domain.model.Ticket
 import com.aurox.gotham.domain.model.Vehicle
 import com.aurox.gotham.domain.util.Result
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 interface TicketRepository {
@@ -20,4 +21,8 @@ interface TicketRepository {
     suspend fun checkForNewTickets(vehicles: List<Vehicle>): Result<List<Ticket>>
     suspend fun getUnpaidReminderTicketCount(): Int
     suspend fun getUnpaidReminderTicketTotal(): Double
+    suspend fun setTicketPaidOverride(summonsNumber: String, isEnabled: Boolean)
+    suspend fun getDeadlineReminderCandidates(today: LocalDate): List<Ticket>
+    suspend fun hasDeadlineReminderEvent(summonsNumber: String, milestoneDay: Int): Boolean
+    suspend fun recordDeadlineReminderEvent(summonsNumber: String, milestoneDay: Int, sentAt: Long = System.currentTimeMillis())
 }

@@ -421,7 +421,11 @@ private fun TicketCard(
                         }
                     ) {
                         val statusText = if (ticket.isPaid) {
-                            stringResource(R.string.ticket_paid)
+                            if (ticket.isPaidOverride) {
+                                stringResource(R.string.ticket_paid_user_marked)
+                            } else {
+                                stringResource(R.string.ticket_paid)
+                            }
                         } else {
                             stringResource(R.string.ticket_unpaid)
                         }
