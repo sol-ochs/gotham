@@ -45,7 +45,7 @@
     <string name="ticket_view_summons">View Summons</string>
     <string name="ticket_mark_paid_local">Mark as Paid</string>
     <string name="ticket_undo_mark_paid_local">Unmark as Paid</string>
-    <string name="ticket_user_marked_note">You chose to mark this ticket as paid. Reminders are suppressed while this override is in place. This will be updated when the city\'s systems reflect the new status.</string>
+    <string name="ticket_user_marked_note">You chose to mark this ticket as paid. Reminders are suppressed while the override is in place. This will be updated when the city\'s systems reflect the new status.</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
