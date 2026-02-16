@@ -21,7 +21,7 @@ fun TicketEntity.toDomain(): Ticket {
         violationLocation = violationLocation,
         fineAmount = fineAmount,
         amountDue = amountDue,
-        violationStatus = violationStatus,
+        adjudicationStatus = normalizeAdjudicationStatus(adjudicationStatus),
         penaltyAmount = penaltyAmount,
         interestAmount = interestAmount,
         paymentAmount = paymentAmount,
@@ -45,7 +45,7 @@ fun Ticket.toEntity(): TicketEntity {
         violationLocation = violationLocation,
         fineAmount = fineAmount,
         amountDue = amountDue,
-        violationStatus = violationStatus,
+        adjudicationStatus = adjudicationStatus,
         penaltyAmount = penaltyAmount,
         interestAmount = interestAmount,
         paymentAmount = paymentAmount,
@@ -104,7 +104,7 @@ fun TicketDto.toEntity(vehicleId: Long): TicketEntity {
         violationLocation = violationLocation,
         fineAmount = fineAmount?.toDoubleOrNull() ?: 0.0,
         amountDue = amountDue?.toDoubleOrNull() ?: 0.0,
-        violationStatus = violationStatus,
+        adjudicationStatus = normalizeAdjudicationStatus(adjudicationStatus),
         penaltyAmount = penaltyAmount?.toDoubleOrNull(),
         interestAmount = interestAmount?.toDoubleOrNull(),
         paymentAmount = paymentAmount?.toDoubleOrNull(),
@@ -122,4 +122,11 @@ fun List<TicketEntity>.toDomainList(): List<Ticket> {
 
 fun List<TicketDto>.toEntityList(vehicleId: Long): List<TicketEntity> {
     return map { it.toEntity(vehicleId) }
+}
+
+private fun normalizeAdjudicationStatus(status: String?): String? {
+    return status
+        ?.trim()
+        ?.takeIf { it.isNotEmpty() }
+        ?.uppercase(Locale.US)
 }

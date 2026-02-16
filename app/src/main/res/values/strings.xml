@@ -36,7 +36,7 @@
     <string name="ticket_location">Location</string>
     <string name="ticket_fine_amount">Fine Amount</string>
     <string name="ticket_amount_due">Amount Due</string>
-    <string name="ticket_status">Status</string>
+    <string name="ticket_adjudication_status">Adjudication Status</string>
     <string name="ticket_paid">Paid</string>
     <string name="ticket_paid_user_marked">Paid (Marked)</string>
     <string name="ticket_unpaid">Unpaid</string>

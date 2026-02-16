@@ -366,7 +366,7 @@ private fun TicketCard(
                     color = MaterialTheme.colorScheme.onSurface
                 )
                 val threshold = LocalDateTime.now().minusDays(PAYABLE_TICKET_AGE_DAYS)
-                if (ticket.isNew && ticket.amountDue > 0 && ticket.issueDateTime.isAfter(threshold)) {
+                if (ticket.isNew && ticket.effectiveAmountDue > 0 && ticket.issueDateTime.isAfter(threshold)) {
                     Badge(
                         containerColor = GoldenYellow,
                         contentColor = Color.Black,

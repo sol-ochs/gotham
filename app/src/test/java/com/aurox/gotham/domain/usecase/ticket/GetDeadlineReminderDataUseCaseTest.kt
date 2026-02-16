@@ -88,7 +88,7 @@ class GetDeadlineReminderDataUseCaseTest {
             violationLocation = null,
             fineAmount = 65.0,
             amountDue = 65.0,
-            violationStatus = "OUTSTANDING",
+            adjudicationStatus = null,
             penaltyAmount = null,
             interestAmount = null,
             paymentAmount = null,

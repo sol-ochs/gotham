@@ -148,12 +148,12 @@ fun TicketDetailScreen(
                         )
                         DetailRow(
                             label = stringResource(R.string.ticket_amount_due),
-                            value = ticket.formattedAmountDue,
+                            value = ticket.formattedEffectiveAmountDue,
                             valueColor = GoldenYellow
                         )
-                        ticket.violationStatus?.let {
+                        ticket.adjudicationStatus?.let {
                             DetailRow(
-                                label = stringResource(R.string.ticket_status),
+                                label = stringResource(R.string.ticket_adjudication_status),
                                 value = it
                             )
                         }
@@ -167,7 +167,7 @@ fun TicketDetailScreen(
                     }
                 }
 
-                if (!ticket.isPaidFromSource || ticket.isPaidOverride) {
+                if (ticket.amountDue > 0.0 || ticket.isPaidOverride) {
                     Button(
                         onClick = viewModel::togglePaidOverride,
                         modifier = Modifier

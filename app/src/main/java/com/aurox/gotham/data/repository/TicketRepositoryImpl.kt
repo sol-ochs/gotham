@@ -119,8 +119,7 @@ class TicketRepositoryImpl @Inject constructor(
                 } else {
                     val existingTicket = ticketDao.getTicketBySummonsNumber(ticketEntity.summonsNumber)
                     if (existingTicket != null) {
-                        val sourcePaid = ticketEntity.violationStatus?.contains("paid", ignoreCase = true) == true ||
-                            ticketEntity.amountDue <= 0.0
+                        val sourcePaid = ticketEntity.amountDue <= 0.0
                         val updatedTicket = ticketEntity.copy(
                             isNew = existingTicket.isNew,
                             isPaidOverride = if (sourcePaid) false else existingTicket.isPaidOverride,

@@ -131,4 +131,18 @@ class TicketMapperTest {
         val entity = dto.toEntity(vehicleId = 1L)
         assertEquals(null, entity.penaltyAmount)
     }
+
+    @Test
+    fun `toEntity normalizes adjudication status with trim and uppercase`() {
+        val dto = createTicketDto(adjudicationStatus = " hearing pending ")
+        val entity = dto.toEntity(vehicleId = 1L)
+        assertEquals("HEARING PENDING", entity.adjudicationStatus)
+    }
+
+    @Test
+    fun `toEntity converts blank adjudication status to null`() {
+        val dto = createTicketDto(adjudicationStatus = "   ")
+        val entity = dto.toEntity(vehicleId = 1L)
+        assertEquals(null, entity.adjudicationStatus)
+    }
 }

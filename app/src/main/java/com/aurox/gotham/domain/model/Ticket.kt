@@ -15,7 +15,7 @@ data class Ticket(
     val violationLocation: String?,
     val fineAmount: Double,
     val amountDue: Double,
-    val violationStatus: String?,
+    val adjudicationStatus: String?,
     val penaltyAmount: Double?,
     val interestAmount: Double?,
     val paymentAmount: Double?,
@@ -25,12 +25,11 @@ data class Ticket(
     val firstSeenAt: Long = System.currentTimeMillis(),
     val lastUpdatedAt: Long = System.currentTimeMillis()
 ) {
-    val isPaidFromSource: Boolean
-        get() = violationStatus?.contains("paid", ignoreCase = true) == true ||
-                amountDue <= 0.0
-
     val isPaid: Boolean
-        get() = isPaidOverride || isPaidFromSource
+        get() = isPaidOverride || amountDue <= 0.0
+
+    val effectiveAmountDue: Double
+        get() = if (isPaid) 0.0 else amountDue
 
     val formattedIssueDate: String
         get() = issueDateTime.format(DATE_FORMATTER)
@@ -41,8 +40,8 @@ data class Ticket(
     val formattedFineAmount: String
         get() = "$${String.format(Locale.US, "%.2f", fineAmount)}"
 
-    val formattedAmountDue: String
-        get() = "$${String.format(Locale.US, "%.2f", amountDue)}"
+    val formattedEffectiveAmountDue: String
+        get() = "$${String.format(Locale.US, "%.2f", effectiveAmountDue)}"
 
     val formattedViolation: String
         get() = ViolationType.getDisplayName(violation)

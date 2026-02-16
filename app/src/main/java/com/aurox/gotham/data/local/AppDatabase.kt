@@ -11,7 +11,7 @@ import com.aurox.gotham.data.local.entity.VehicleEntity
 
 @Database(
     entities = [VehicleEntity::class, TicketEntity::class, DeadlineReminderEventEntity::class],
-    version = 6,
+    version = 7,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

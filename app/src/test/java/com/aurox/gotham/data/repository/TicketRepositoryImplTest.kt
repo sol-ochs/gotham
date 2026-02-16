@@ -43,7 +43,7 @@ class TicketRepositoryImplTest {
         coEvery { api.getTickets(any(), any(), any(), any()) } returns listOf(
             ticketDto(
                 summonsNumber = existingTicket.summonsNumber,
-                violationStatus = "PAID",
+                adjudicationStatus = null,
                 amountDue = "0.00"
             )
         )
@@ -68,7 +68,32 @@ class TicketRepositoryImplTest {
         coEvery { api.getTickets(any(), any(), any(), any()) } returns listOf(
             ticketDto(
                 summonsNumber = existingTicket.summonsNumber,
-                violationStatus = "OUTSTANDING",
+                adjudicationStatus = null,
+                amountDue = "65.00"
+            )
+        )
+        coEvery { ticketDao.getSummonsNumbersByVehicle(vehicle.id) } returns listOf(existingTicket.summonsNumber)
+        coEvery { ticketDao.getTicketBySummonsNumber(existingTicket.summonsNumber) } returns existingTicket
+        coJustRun { ticketDao.updateTicket(capture(updatedTicketSlot)) }
+
+        val result = repository.syncTicketsForVehicle(vehicle)
+
+        assertTrue(result is Result.Success)
+        assertEquals(true, updatedTicketSlot.captured.isPaidOverride)
+        assertEquals(existingTicket.paidOverrideAt, updatedTicketSlot.captured.paidOverrideAt)
+        coVerify(exactly = 1) { ticketDao.updateTicket(any()) }
+    }
+
+    @Test
+    fun `sync keeps paid override when adjudication text says paid but amount due remains positive`() = runTest {
+        val vehicle = testVehicle()
+        val updatedTicketSlot = slot<TicketEntity>()
+        val existingTicket = existingTicket(isPaidOverride = true, paidOverrideAt = 123456L)
+
+        coEvery { api.getTickets(any(), any(), any(), any()) } returns listOf(
+            ticketDto(
+                summonsNumber = existingTicket.summonsNumber,
+                adjudicationStatus = "HEARING HELD-PAID",
                 amountDue = "65.00"
             )
         )
@@ -104,7 +129,7 @@ class TicketRepositoryImplTest {
             violationLocation = "TEST LOCATION",
             fineAmount = 65.0,
             amountDue = 65.0,
-            violationStatus = "OUTSTANDING",
+            adjudicationStatus = null,
             penaltyAmount = null,
             interestAmount = null,
             paymentAmount = null,
@@ -118,7 +143,7 @@ class TicketRepositoryImplTest {
 
     private fun ticketDto(
         summonsNumber: String,
-        violationStatus: String,
+        adjudicationStatus: String?,
         amountDue: String
     ): TicketDto {
         return TicketDto(
@@ -132,7 +157,7 @@ class TicketRepositoryImplTest {
             violationLocation = "TEST LOCATION",
             fineAmount = "65.00",
             amountDue = amountDue,
-            violationStatus = violationStatus,
+            adjudicationStatus = adjudicationStatus,
             penaltyAmount = null,
             interestAmount = null,
             paymentAmount = null

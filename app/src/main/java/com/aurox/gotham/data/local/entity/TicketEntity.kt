@@ -53,8 +53,8 @@ data class TicketEntity(
     @ColumnInfo(name = "amount_due")
     val amountDue: Double,
 
-    @ColumnInfo(name = "violation_status")
-    val violationStatus: String?,
+    @ColumnInfo(name = "adjudication_status")
+    val adjudicationStatus: String?,
 
     @ColumnInfo(name = "penalty_amount")
     val penaltyAmount: Double?,
