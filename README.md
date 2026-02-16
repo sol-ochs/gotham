@@ -1,6 +1,6 @@
 # Gotham
 
-Gotham is a native Android app (Kotlin) that tracks NYC parking tickets via the NYC Open Data API. Users can register up to 5 vehicles, receive daily notifications when new tickets appear, and get periodic reminders about unpaid tickets.
+Gotham is a native Android app (Kotlin) that tracks NYC parking tickets via the NYC Open Data API. Users can register up to 5 vehicles, receive notifications when new tickets appear, and get reminded about unpaid tickets.
 
 ## Features
 
