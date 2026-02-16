@@ -7,9 +7,8 @@ Gotham is a native Android app (Kotlin) that tracks NYC parking tickets via the 
 - Track up to 5 vehicles
 - Daily background checks at 8am
 - Push notifications for new tickets
-- Periodic reminders for unpaid tickets
-- Deadline reminders at 7, 3, and 1 day before the 30-day window
-- Local "Mark as Paid" override to suppress reminders until NYC data catches up
+- Periodic unpaid reminders
+- Payment deadline reminders
 - Offline support with local caching
 
 ## Build Commands
@@ -19,25 +18,6 @@ Gotham is a native Android app (Kotlin) that tracks NYC parking tickets via the 
 ./gradlew assembleRelease       # Release build (requires keystore.properties)
 ./gradlew installDebug          # Build and install on connected device
 ./gradlew test                  # Run unit tests
-```
-
-## Debugging
-
-View logs for the app:
-```bash
-adb logcat -c && adb logcat --pid=$(adb shell pidof com.aurox.gotham) -v color
-```
-
-Create test tickets (debug builds only):
-```bash
-adb shell am broadcast -n com.aurox.gotham/.debug.DebugTicketReceiver \
-  -a com.aurox.gotham.debug.TEST_TICKET \
-  --es plate "ABC1234" --ei ticket_count 2 --ef fine_amount 115.0 --es violation "'FIRE HYDRANT'"
-```
-
-Trigger unpaid reminder notification (debug builds only):
-```bash
-adb shell "am broadcast -n com.aurox.gotham/.debug.DebugTicketReceiver -a com.aurox.gotham.debug.TRIGGER_UNPAID_REMINDER"
 ```
 
 ## Architecture
@@ -57,6 +37,25 @@ Clean Architecture with MVVM:
 - **Background sync**: WorkManager schedules daily ticket checks
 - **Preferences**: DataStore for user settings
 - **Release signing**: Configured via `keystore.properties`
+
+## Debugging
+
+View logs for the app:
+```bash
+adb logcat -c && adb logcat --pid=$(adb shell pidof com.aurox.gotham) -v color
+```
+
+Create test tickets (debug builds only):
+```bash
+adb shell am broadcast -n com.aurox.gotham/.debug.DebugTicketReceiver \
+  -a com.aurox.gotham.debug.TEST_TICKET \
+  --es plate "ABC1234" --ei ticket_count 2 --ef fine_amount 115.0 --es violation "'FIRE HYDRANT'"
+```
+
+Trigger unpaid reminder notification (debug builds only):
+```bash
+adb shell "am broadcast -n com.aurox.gotham/.debug.DebugTicketReceiver -a com.aurox.gotham.debug.TRIGGER_UNPAID_REMINDER"
+```
 
 ## License
 
