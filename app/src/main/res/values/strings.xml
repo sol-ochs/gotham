@@ -38,15 +38,14 @@
     <string name="ticket_amount_due">Amount Due</string>
     <string name="ticket_status">Status</string>
     <string name="ticket_paid">Paid</string>
-    <string name="ticket_paid_user_marked">Paid (User Marked)</string>
+    <string name="ticket_paid_user_marked">Paid (Marked)</string>
     <string name="ticket_unpaid">Unpaid</string>
     <string name="ticket_new_badge">NEW</string>
     <string name="ticket_filter_all">All Vehicles</string>
     <string name="ticket_view_summons">View Summons</string>
-    <string name="ticket_user_marked_badge">USER MARKED</string>
-    <string name="ticket_mark_paid_local">Mark as Paid (Local)</string>
-    <string name="ticket_undo_mark_paid_local">Undo Local Paid</string>
-    <string name="ticket_user_marked_note">User marked as paid. Reminders are suppressed until you undo this.</string>
+    <string name="ticket_mark_paid_local">Mark as Paid</string>
+    <string name="ticket_undo_mark_paid_local">Unmark as Paid</string>
+    <string name="ticket_user_marked_note">You chose to mark this ticket as paid. Reminders are suppressed while this override is in place. This will be updated when the city\'s systems reflect the new status.</string>
 
     <!-- Settings -->
     <string name="settings_title">Settings</string>
