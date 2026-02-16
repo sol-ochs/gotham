@@ -57,6 +57,11 @@ Trigger unpaid reminder notification (debug builds only):
 adb shell "am broadcast -n com.aurox.gotham/.debug.DebugTicketReceiver -a com.aurox.gotham.debug.TRIGGER_UNPAID_REMINDER"
 ```
 
+Trigger deadline reminder notification (debug builds only):
+```bash
+adb shell "am broadcast -n com.aurox.gotham/.debug.DebugTicketReceiver -a com.aurox.gotham.debug.TRIGGER_DEADLINE_REMINDER"
+```
+
 ## License
 
 MIT
